@@ -31,13 +31,13 @@
 | 关键路径与高风险边界测试 | `PASS_LOCAL` | 27 个测试文件、212 项 TypeScript/React 测试和 8 项 Python 契约测试通过。断言覆盖新闻不能单独卖出、四项全通过、卖出上下文、买回重置、冷启动旧新闻、单资产 stale、ID gap、高频窗口、跨地区归类、两源 API、append-only journal 和只读能力。 |
 | 覆盖率门禁 | `PASS_LOCAL` | statements 89.97%、branches 82.03%、functions 92.28%、lines 93.25%；均高于仓库阈值并由总门禁执行。 |
 | lint/格式/类型/Schema/测试自动化 | `PASS_LOCAL` | `pnpm run ci` 统一执行 Biome、只读/秘密扫描、TypeScript strict、30 份 schema freshness、历史 fixture 校验、Vitest coverage、Ruff、Mypy、Pytest、依赖审计、许可证和生产构建。 |
-| CI 合并前定义 | `REPOSITORY_RECORD` | `.github/workflows/ci.yml` 使用冻结 lockfile 和 Node 22/Python 3.12 后执行 `pnpm run ci`。无 remote/run，远程状态仍为 `NOT_RUN`。 |
+| CI 合并前定义 | `PASS_REMOTE` | 公开仓库的 `.github/workflows/ci.yml` 使用冻结 lockfile 和 Node 22/Python 3.12 后执行 `pnpm run ci`；首次远端 push run [32646971643](https://github.com/MeiYanDong/virtual-risk-radar/actions/runs/32646971643) 成功。 |
 | CD 与部署后运行验证 | `NOT_CONFIGURED` | 本地 `127.0.0.1:8787` 已做当前进程读回；没有部署目标、CD 或部署后 receipt，不能声称已发布。 |
 | 变更文档、tech specs 与 ADR | `PASS_REPOSITORY_RECORD` | README、v0.3 runbook、known limitations、change log、source registry spec、生成 schema README、ADR-0012、质量审查和实施日志均已更新。 |
 | 工具统一代码风格 | `PASS_LOCAL` | Biome 检查 118 个文件无修复项；Python 6 个文件通过 Ruff 格式和 lint。生成 schema 由 `schema:check` 字节级校验。 |
 | 简单清晰的结构 | `REVIEWED_LOCAL` | 活跃 runtime 只有一个 TechFlow adapter、一个 Binance adapter、一个确定性引擎和一个 journal；没有 RPC、钱包、DEX、LLM、第二源或消息中间件进入热路径。 |
 | 小型可验收故事卡 | `PASS_ACTIVE_SCOPE` | v0.3 任务按 A–H 拆分；实现项有测试/读回后才勾选，60 分钟、30 事件和 14 天任务继续未勾选。 |
-| 浏览器可用性 | `PASS_LOCAL_BROWSER_QA` | 真实桌面与 390×844 视口渲染通过；键盘 `Tab + Enter` 可展开证据；最后一次刷新后控制台 0 error / 0 warning。截图保存在 `output/playwright/`。 |
+| 浏览器可用性 | `PASS_LOCAL_BROWSER_QA` | 真实桌面与 390×844 视口渲染通过；读者界面不暴露后台原生字段，最后一次刷新后控制台 0 error / 0 warning。截图保存在 `output/playwright/`。 |
 
 ## 门禁中发现并修复的真实问题
 
@@ -58,8 +58,8 @@
 | P0 | 历史验证仍为 1/30；连续 Shadow 未达到 14 天 | 不能校准极端市场备用阈值，不能给出稳定经济结论；保持 `NOT_CALIBRATED/POSITIVE_EV_NOT_PROVEN`。 |
 | P0 | 没有 DEX 成交、钱包或执行收据 | 所有价格与信号仅为 `CEX_REFERENCE`；用户必须在 DEX 钱包检查即时 quote。 |
 | P1 | TechFlow 是单一公共网页且无已核实 API/RSS/SLA/再分发许可 | 页面漂移、403/429 或服务中断会进入 `DATA_UNAVAILABLE`；按产品决定不启用隐蔽接口或第二来源兜底。 |
-| P1 | GitHub Actions 未运行，CD 未配置，部署后 readback 未运行 | 当前只能声称本地门禁和本地 runtime 通过；远程状态保持 `NOT_RUN/NOT_CONFIGURED`。 |
-| P1 | 仓库仍无 commit/remote | 不能提供提交历史、PR 或合并 receipt；本轮未获授权创建 remote 或提交。 |
+| P1 | CD 未配置，部署后 readback 未运行 | GitHub Actions 已通过，但这只证明代码门禁；没有部署目标或部署后 receipt，不能声称线上服务已发布。 |
+| P2 | 公开仓库暂未添加开源许可证 | 代码可公开查看，但未向第三方授予明确复用许可；选择许可证需要用户单独决定。 |
 | P2 | 当前 Node 运行时对 `node:sqlite` 输出 ExperimentalWarning | 不影响本地测试结果，但选择长期部署运行时前需要重新评审 driver 稳定性。 |
 
 ## 可复现命令与当前结果
@@ -88,7 +88,7 @@ pnpm shadow:report:v3
 # IN_PROGRESS; see output/reports/v3-shadow-status.json
 ```
 
-远程 GitHub Actions：`NOT_RUN`  
+远程 GitHub Actions：`PASS`（[run 32646971643](https://github.com/MeiYanDong/virtual-risk-radar/actions/runs/32646971643)）  
 CD：`NOT_CONFIGURED`  
 部署后 runtime readback：`NOT_RUN`  
 本地实时进程：`VERIFIED_CURRENT`，但 source soak 尚未完成 60 分钟  

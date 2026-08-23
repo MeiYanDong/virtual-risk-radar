@@ -163,10 +163,11 @@ v0.3 固定边界：
 - [x] **V3-H004** 更新单元、集成、回放和 E2E 测试；删除已失效断言，不降低关键路径断言质量。
 - [x] **V3-H005** `lint/format/typecheck/unit/integration/e2e/build/secret-scan` 全部通过并留下命令与结果。
 - [x] **V3-H006** 更新 README、运行手册、已知限制和变更记录，明确 TechFlow 无 SLA、页面入口可能变化。
-- [x] **V3-H007** 本地运行 readback 证明仅两条外部输入处于 active；GitHub Actions/CD 未运行时继续准确报告 `NOT_RUN/NOT_CONFIGURED`。
+- [x] **V3-H007** 本地运行 readback 证明仅两条外部输入处于 active；公开 GitHub Actions 已运行并通过，CD 继续准确报告 `NOT_CONFIGURED`。
 - [x] **V3-H008** v0.3 连续 Shadow 稳定后，再单独评审是否删除 v0.2 RPC/DEX 代码；未评审前不做不可逆删除。`CONTROL_ACTIVE`：尚未达到稳定门槛，本轮未删除 v0.2 代码。
+- [x] **V3-H009** 创建公开仓库 `MeiYanDong/virtual-risk-radar`，默认分支与本地 upstream 均为 `main`；公开可见性、远端 commit 和首次 Actions run 已回读验证。
 
-完成证据：`apps/server/src/index.ts`、`apps/server/src/v3-runtime.ts`、`apps/server/src/app.ts`、`config/default.json`、`config/source-registry.json`、`docs/evidence/implementation-log.md` Batch 6；`pnpm run ci` 本地通过，远程仍为 `NOT_RUN/NOT_CONFIGURED`。
+完成证据：`apps/server/src/index.ts`、`apps/server/src/v3-runtime.ts`、`apps/server/src/app.ts`、`config/default.json`、`config/source-registry.json`、`docs/evidence/implementation-log.md` Batch 6/8；`pnpm run ci` 本地与 GitHub Actions 均通过，CD 仍为 `NOT_CONFIGURED`。
 
 ### v0.3 阶段门槛
 

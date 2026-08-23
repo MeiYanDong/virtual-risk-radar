@@ -133,9 +133,20 @@
 - 组件防回归测试断言读者界面不出现 `CEX_REFERENCE/SHADOW_CANDIDATE/NEWS_ARMED/VERIFIED_CURRENT/PUBLIC_WEBPAGE/STALE` 或 evidence tape。
 - 最终 `pnpm run ci`：PASS；format/lint、只读边界、TypeScript、30 schemas、10 fixtures、27 files / 212 tests、覆盖率门槛、Python 8 tests、Node/Python 漏洞审计、许可证和生产构建全部通过。桌面/移动收据：`output/playwright/v3-human-readable-desktop.png`、`output/playwright/v3-human-readable-mobile.png`。
 
+## 2026-08-23 / Batch 8 / 公开 GitHub 首次发布
+
+状态：`PUBLISHED_PUBLIC / CI_PASS`
+
+- 创建公开仓库 [`MeiYanDong/virtual-risk-radar`](https://github.com/MeiYanDong/virtual-risk-radar)，默认分支为 `main`；本地 `origin` 与 upstream 已配置。
+- 首次提交 `7a60e8e` 包含 215 个已确认项目文件；`data/`、`.env*`、虚拟环境、缓存、`.playwright-cli/`、`egg-info` 和运行数据库均未进入提交。
+- 发布前检查未发现真实凭据、本机绝对路径或 GitHub 超限文件；只读/秘密边界扫描仍为 `READ_ONLY_BOUNDARY_OK scanned=203`。
+- 首次 push 触发 GitHub Actions run [32646971643](https://github.com/MeiYanDong/virtual-risk-radar/actions/runs/32646971643)，quality job 1 分 24 秒完成，完整 `pnpm run ci` 成功。
+- GitHub 对旧 Action 运行时给出 Node.js 20 弃用提示；现已按各官方仓库的当期稳定 release 升级到 `checkout@v7.0.1`、`setup-node@v7.0.0`、`setup-python@v7.0.0` 和 `pnpm/action-setup@v6.0.10`。
+
 ## 外部状态
 
-- GitHub Actions 远程 run：`NOT_RUN`（仓库无 commit/remote）。
+- GitHub 仓库：`PUBLIC`，[MeiYanDong/virtual-risk-radar](https://github.com/MeiYanDong/virtual-risk-radar)。
+- GitHub Actions 远程 run：`PASS`（[32646971643](https://github.com/MeiYanDong/virtual-risk-radar/actions/runs/32646971643)）。
 - CD：`NOT_CONFIGURED`。
 - 部署后 runtime readback：`NOT_RUN`。
 - 60 分钟 TechFlow/Binance soak：`IN_PROGRESS`。

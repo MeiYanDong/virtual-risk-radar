@@ -1,0 +1,90 @@
+{
+  "fixtureId": "virtual-risk-2026-08-22-v1",
+  "evidenceLevel": "HISTORICAL_RECEIPT",
+  "capturedAt": "2026-08-22T08:51:01.092Z",
+  "window": {
+    "start": "2026-08-22T03:40:00.000Z",
+    "end": "2026-08-22T05:35:00.000Z",
+    "timezone": "UTC",
+    "uiTimezone": "Asia/Shanghai"
+  },
+  "sources": {
+    "spot": {
+      "provider": "Binance public market-data REST API",
+      "baseUrl": "https://api.binance.com",
+      "methods": ["GET /api/v3/klines", "GET /api/v3/aggTrades", "GET /api/v3/exchangeInfo"],
+      "authentication": "NONE"
+    },
+    "derivatives": {
+      "provider": "Binance USD-M public market-data REST API",
+      "baseUrl": "https://fapi.binance.com",
+      "methods": [
+        "GET /fapi/v1/aggTrades",
+        "GET /futures/data/openInterestHist",
+        "GET /futures/data/takerlongshortRatio",
+        "GET /futures/data/topLongShortPositionRatio"
+      ],
+      "authentication": "NONE",
+      "retentionWarning": "Provider documents a latest-48-hour limit for aggregate trades and latest-30-day limit for statistical series"
+    }
+  },
+  "constraints": {
+    "referenceMarketOnly": true,
+    "cexOrderOrBalanceCapability": "UNSUPPORTED",
+    "baseDexQuote": "UNKNOWN:not_recorded",
+    "robinhoodDexQuote": "UNKNOWN:not_recorded",
+    "executionReceipt": "UNKNOWN:not_recorded"
+  },
+  "files": {
+    "binance-spot-btcusdt-1s-klines.json": {
+      "checksum": "sha256:6262695e267349093a61e04f21ce5c604315882b6d002aaa36ddc2fe9cbb15a3",
+      "bytes": 1574935,
+      "records": 6901
+    },
+    "binance-spot-ethusdt-1s-klines.json": {
+      "checksum": "sha256:3d518c2a1359d99b4404b1071aa3db0896cbb647d7d8ac50ee6066c285bd2296",
+      "bytes": 1549349,
+      "records": 6901
+    },
+    "binance-spot-solusdt-1s-klines.json": {
+      "checksum": "sha256:b66aeb3e1c7228cb49239324b70a098454164ec35d8bbce48fbf4ed99de00129",
+      "bytes": 1520799,
+      "records": 6901
+    },
+    "binance-spot-virtualusdt-1s-klines.json": {
+      "checksum": "sha256:d8d893fe41a03c14cdea4bf3ef420dd10035f9bbdf092de18e08e32b5934b381",
+      "bytes": 1444266,
+      "records": 6901
+    },
+    "binance-spot-virtualusdt-aggtrades.json": {
+      "checksum": "sha256:b2b482445201024ba1bb5b5eb1665166d4343da1bc9cde3e05b651173467162c",
+      "bytes": 7370599,
+      "records": 43729
+    },
+    "binance-futures-virtualusdt-aggtrades.json": {
+      "checksum": "sha256:5542cf085371f602c8e9f033e8f414522eb52fb0d7a48e66106b1b771893658f",
+      "bytes": 7878388,
+      "records": 47631
+    },
+    "binance-futures-virtualusdt-open-interest-5m.json": {
+      "checksum": "sha256:74902ff4e189541df41641edb0b0479af315f9eac3e81f89d480ea46d5826f32",
+      "bytes": 5091,
+      "records": 24
+    },
+    "binance-futures-virtualusdt-taker-ratio-5m.json": {
+      "checksum": "sha256:26b8cfe96da9b1a06409cef1a47cd1213028279efcb8cb902f156769a42c942f",
+      "bytes": 3085,
+      "records": 24
+    },
+    "binance-futures-virtualusdt-top-position-ratio-5m.json": {
+      "checksum": "sha256:c6bbbd89d6d1d94505449fcfdadaf20c9bcce593ba1444f337746467af5d667e",
+      "bytes": 3843,
+      "records": 24
+    },
+    "binance-spot-virtualusdt-exchange-info.json": {
+      "checksum": "sha256:82b28deac60697ec8a2b62052322b0229b58d15193e2d3c2ce51ef0a48172b9a",
+      "bytes": 8984,
+      "records": 1
+    }
+  }
+}

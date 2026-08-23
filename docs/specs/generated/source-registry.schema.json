@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "2.0.0"
+    },
+    "reviewedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "activeSources": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "capabilityState": {
+              "type": "string",
+              "enum": [
+                "PLANNED",
+                "TESTED",
+                "VERIFIED_CURRENT",
+                "UNSUPPORTED"
+              ]
+            },
+            "cost": {
+              "type": "string",
+              "const": "FREE"
+            },
+            "authentication": {
+              "type": "string",
+              "const": "NONE"
+            },
+            "writeCapability": {
+              "type": "string",
+              "const": "UNSUPPORTED"
+            },
+            "failureSemantics": {
+              "type": "string",
+              "minLength": 1
+            },
+            "category": {
+              "type": "string",
+              "const": "NEWS"
+            },
+            "kind": {
+              "type": "string",
+              "const": "PUBLIC_WEBPAGE"
+            },
+            "url": {
+              "type": "string",
+              "const": "https://www.techflowpost.com/newsletter"
+            },
+            "officialApi": {
+              "type": "string",
+              "const": "NOT_VERIFIED"
+            },
+            "rss": {
+              "type": "string",
+              "const": "NOT_VERIFIED"
+            },
+            "availabilitySla": {
+              "type": "string",
+              "const": "NONE"
+            },
+            "redistributionLicense": {
+              "type": "string",
+              "const": "NOT_VERIFIED"
+            },
+            "scope": {
+              "type": "string",
+              "const": "LATEST_NEWSLETTER_ITEMS_ONLY"
+            },
+            "polling": {
+              "type": "string",
+              "minLength": 1
+            },
+            "retention": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "sourceId",
+            "capabilityState",
+            "cost",
+            "authentication",
+            "writeCapability",
+            "failureSemantics",
+            "category",
+            "kind",
+            "url",
+            "officialApi",
+            "rss",
+            "availabilitySla",
+            "redistributionLicense",
+            "scope",
+            "polling",
+            "retention"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "capabilityState": {
+              "type": "string",
+              "enum": [
+                "PLANNED",
+                "TESTED",
+                "VERIFIED_CURRENT",
+                "UNSUPPORTED"
+              ]
+            },
+            "cost": {
+              "type": "string",
+              "const": "FREE"
+            },
+            "authentication": {
+              "type": "string",
+              "const": "NONE"
+            },
+            "writeCapability": {
+              "type": "string",
+              "const": "UNSUPPORTED"
+            },
+            "failureSemantics": {
+              "type": "string",
+              "minLength": 1
+            },
+            "category": {
+              "type": "string",
+              "const": "MARKET"
+            },
+            "kind": {
+              "type": "string",
+              "const": "SPOT_WEBSOCKET"
+            },
+            "url": {
+              "type": "string",
+              "const": "wss://stream.binance.com:9443/stream"
+            },
+            "documentationUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "symbols": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "BTCUSDT"
+                },
+                {
+                  "type": "string",
+                  "const": "ETHUSDT"
+                },
+                {
+                  "type": "string",
+                  "const": "SOLUSDT"
+                },
+                {
+                  "type": "string",
+                  "const": "VIRTUALUSDT"
+                }
+              ]
+            },
+            "streams": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "aggTrade"
+                },
+                {
+                  "type": "string",
+                  "const": "bookTicker"
+                }
+              ]
+            },
+            "takerSideMapping": {
+              "type": "string",
+              "const": "aggTrade.m=true => taker SELL; false => taker BUY"
+            },
+            "gapSemantics": {
+              "type": "string",
+              "minLength": 1
+            },
+            "retention": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "sourceId",
+            "capabilityState",
+            "cost",
+            "authentication",
+            "writeCapability",
+            "failureSemantics",
+            "category",
+            "kind",
+            "url",
+            "documentationUrl",
+            "symbols",
+            "streams",
+            "takerSideMapping",
+            "gapSemantics",
+            "retention"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "prohibitedRuntimeSources": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "RPC"
+        },
+        {
+          "type": "string",
+          "const": "CHAIN_MONITORING"
+        },
+        {
+          "type": "string",
+          "const": "DEX_QUOTE"
+        },
+        {
+          "type": "string",
+          "const": "WALLET_READ"
+        },
+        {
+          "type": "string",
+          "const": "DERIVATIVES"
+        },
+        {
+          "type": "string",
+          "const": "SECOND_EXCHANGE"
+        },
+        {
+          "type": "string",
+          "const": "SECOND_NEWS_SOURCE"
+        },
+        {
+          "type": "string",
+          "const": "PAID_SOURCE"
+        }
+      ]
+    },
+    "upgradeRule": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "reviewedAt",
+    "activeSources",
+    "prohibitedRuntimeSources",
+    "upgradeRule"
+  ],
+  "additionalProperties": false,
+  "$id": "https://virtual-risk.local/schema/source-registry.v1.json"
+}

@@ -1,0 +1,418 @@
+{
+  "reportId": "virtual-risk-2026-08-22-v3-two-source-replay",
+  "schemaVersion": "3.0.0",
+  "modelVersion": "0.3.0",
+  "generatedFrom": "captured received-time fixtures; no live network read",
+  "inputPolicy": {
+    "news": ["TechFlow public newsletter item 133044"],
+    "market": ["Binance Spot BTC/ETH/SOL/VIRTUAL klines", "Binance Spot VIRTUAL aggTrade"],
+    "excluded": [
+      "RPC",
+      "DEX quote",
+      "wallet",
+      "futures",
+      "OI",
+      "funding",
+      "second news source",
+      "second exchange"
+    ]
+  },
+  "inputChecksums": {
+    "binance-spot-btcusdt-1s-klines.json": "UNKNOWN",
+    "binance-spot-ethusdt-1s-klines.json": "UNKNOWN",
+    "binance-spot-solusdt-1s-klines.json": "UNKNOWN",
+    "binance-spot-virtualusdt-1s-klines.json": "UNKNOWN",
+    "binance-spot-virtualusdt-aggtrades.json": "UNKNOWN"
+  },
+  "scanWindow": {
+    "from": "2026-08-22T05:00:00.999Z",
+    "to": "2026-08-22T05:35:00.999Z",
+    "stepMs": 1000,
+    "futureReadsAllowed": false
+  },
+  "techflowEvent": {
+    "observationId": "techflow-133044-r0-d4f8746cc8b4",
+    "sourceItemId": "133044",
+    "receivedAt": "2026-08-22T04:02:19.000Z",
+    "eventType": "TRADE_SANCTIONS",
+    "countries": ["US", "CA"],
+    "direction": "RISK_OFF",
+    "severity": "HIGH",
+    "canadaSpecificRouting": false
+  },
+  "spotOrderFlowCoverage": {
+    "aggregateTradeRecords": 43729,
+    "gapEvents": 20,
+    "missingAggregateIds": 53,
+    "rule": "Any unresolved ID gap makes only the overlapping 60-second order-flow condition UNKNOWN"
+  },
+  "firstSellReady": {
+    "at": "2026-08-22T05:07:35.999Z",
+    "panel": {
+      "model": "SELL",
+      "stage": "SELL_READY",
+      "output": "SHADOW_CANDIDATE",
+      "outputBasis": "CEX_REFERENCE",
+      "passed": 4,
+      "required": 4,
+      "conditions": [
+        {
+          "id": "S1-MACRO-SHOCK",
+          "label": "宏观冲击",
+          "state": "PASS",
+          "current": "TRADE_SANCTIONS / HIGH",
+          "target": "TechFlow RISK_OFF + HIGH/SYSTEMIC，接收后 ≤ 120 分钟",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": 3916,
+          "source": "techflow-public-newsletter",
+          "dataAgeMs": 0,
+          "reason": "Deterministic TRADE_SANCTIONS rule matched; country is an entity, not a routing key",
+          "evidenceIds": ["techflow-133044-r0-d4f8746cc8b4"]
+        },
+        {
+          "id": "S2-CROSS-ASSET-DRAWDOWN",
+          "label": "跨资产下跌",
+          "state": "PASS",
+          "current": "BTC -0.231% · ETH -0.278% · SOL -0.793%",
+          "target": "BTC/ETH/SOL 至少 2/3 达到各自 60 秒阈值",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": null,
+          "source": "binance-spot-public",
+          "dataAgeMs": 0,
+          "reason": "Only Binance Spot bookTicker mid-prices are used",
+          "evidenceIds": [
+            "fixture-btc-1787375255999",
+            "fixture-eth-1787375255999",
+            "fixture-sol-1787375255999"
+          ]
+        },
+        {
+          "id": "S3-VIRTUAL-RELATIVE-WEAKNESS",
+          "label": "VIRTUAL 相对弱势",
+          "state": "PASS",
+          "current": "-0.340%",
+          "target": "≤ -0.250%",
+          "gap": "0.000 个百分点",
+          "progress": 1,
+          "durationSeconds": null,
+          "source": "binance-spot-public",
+          "dataAgeMs": 0,
+          "reason": "VIRTUAL return minus the equal-weight BTC/ETH/SOL return",
+          "evidenceIds": ["fixture-spot-window-1787375255999", "fixture-virtual-agg-59478576"]
+        },
+        {
+          "id": "S4-VIRTUAL-SELL-PRESSURE",
+          "label": "VIRTUAL 主动卖压",
+          "state": "PASS",
+          "current": "0.433（buy/sell）",
+          "target": "≤ 0.6，持续 3 秒",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": 4,
+          "source": "binance-spot-public",
+          "dataAgeMs": 99,
+          "reason": "VIRTUAL Spot aggTrade quote notional; buyer-maker maps to taker SELL",
+          "evidenceIds": ["fixture-spot-window-1787375255999", "fixture-virtual-agg-59478576"]
+        }
+      ],
+      "nextGap": "四项条件均已满足",
+      "extremeMarketFallback": "NOT_USED",
+      "sellContext": "SHADOW_REFERENCE",
+      "reason": "TechFlow macro arm and all three Binance confirmations pass; Shadow only",
+      "evidenceIds": [
+        "techflow-133044-r0-d4f8746cc8b4",
+        "fixture-btc-1787375255999",
+        "fixture-eth-1787375255999",
+        "fixture-sol-1787375255999",
+        "fixture-spot-window-1787375255999",
+        "fixture-virtual-agg-59478576",
+        "fixture-spot-window-1787375255999",
+        "fixture-virtual-agg-59478576"
+      ]
+    }
+  },
+  "firstRebuyReady": {
+    "at": "2026-08-22T05:24:47.999Z",
+    "panel": {
+      "model": "REBUY",
+      "stage": "REBUY_READY",
+      "output": "SHADOW_CANDIDATE",
+      "outputBasis": "CEX_REFERENCE",
+      "passed": 4,
+      "required": 4,
+      "conditions": [
+        {
+          "id": "B1-NO-NEW-MACRO-ESCALATION",
+          "label": "无新宏观升级",
+          "state": "PASS",
+          "current": "最近升级 4948 秒前",
+          "target": "最近一次升级后安静 ≥ 900 秒",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": 4948,
+          "source": "techflow-public-newsletter",
+          "dataAgeMs": 0,
+          "reason": "Any new qualifying macro escalation restarts the quiet window",
+          "evidenceIds": ["techflow-133044-r0-d4f8746cc8b4"]
+        },
+        {
+          "id": "B2-CROSS-ASSET-NO-NEW-LOW",
+          "label": "跨资产无新低",
+          "state": "PASS",
+          "current": "797 秒未出现新的运行低点",
+          "target": "BTC/ETH/SOL/VIRTUAL 均新鲜，持续 ≥ 300 秒",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": 797,
+          "source": "binance-spot-public",
+          "dataAgeMs": 0,
+          "reason": "A fresh lower mid-price in any tracked asset resets this timer",
+          "evidenceIds": ["fixture-spot-window-1787376287999", "fixture-virtual-agg-59510875"]
+        },
+        {
+          "id": "B3-VIRTUAL-RELATIVE-RECOVERY",
+          "label": "VIRTUAL 相对恢复",
+          "state": "PASS",
+          "current": "0.449%",
+          "target": "≥ 0.000%，持续 30 秒",
+          "gap": "0.000 个百分点",
+          "progress": 1,
+          "durationSeconds": 77,
+          "source": "binance-spot-public",
+          "dataAgeMs": 0,
+          "reason": "VIRTUAL return minus the equal-weight BTC/ETH/SOL return",
+          "evidenceIds": ["fixture-spot-window-1787376287999", "fixture-virtual-agg-59510875"]
+        },
+        {
+          "id": "B4-SELL-PRESSURE-NORMALIZED",
+          "label": "主动卖压归一",
+          "state": "PASS",
+          "current": "2.637（buy/sell）",
+          "target": "≥ 1.1，持续 30 秒",
+          "gap": "0",
+          "progress": 1,
+          "durationSeconds": 30,
+          "source": "binance-spot-public",
+          "dataAgeMs": 234,
+          "reason": "VIRTUAL Spot aggTrade quote notional; buyer-maker maps to taker SELL",
+          "evidenceIds": ["fixture-spot-window-1787376287999", "fixture-virtual-agg-59510875"]
+        }
+      ],
+      "nextGap": "四项条件均已满足",
+      "extremeMarketFallback": "NOT_USED",
+      "sellContext": "SHADOW_REFERENCE",
+      "reason": "Rebuy evaluates recovery from the recorded sell context",
+      "evidenceIds": [
+        "techflow-133044-r0-d4f8746cc8b4",
+        "fixture-spot-window-1787376287999",
+        "fixture-virtual-agg-59510875",
+        "fixture-spot-window-1787376287999",
+        "fixture-virtual-agg-59510875",
+        "fixture-spot-window-1787376287999",
+        "fixture-virtual-agg-59510875"
+      ]
+    }
+  },
+  "transitions": [
+    {
+      "at": "2026-08-22T05:00:00.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:03:20.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:04:20.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:07:35.999Z",
+      "sellStage": "SELL_READY",
+      "sellPassed": 4,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:07:50.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 3,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:09:45.999Z",
+      "sellStage": "SELL_READY",
+      "sellPassed": 4,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:09:47.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 3,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:09:54.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 3,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 1
+    },
+    {
+      "at": "2026-08-22T05:13:28.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:13:46.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:15:23.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:15:51.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:17:27.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:18:57.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 2,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:19:57.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:20:08.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:21:08.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:24:47.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_READY",
+      "rebuyPassed": 4
+    },
+    {
+      "at": "2026-08-22T05:25:04.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 3
+    },
+    {
+      "at": "2026-08-22T05:25:39.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:26:39.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 2,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:26:58.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "DATA_UNAVAILABLE",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:27:58.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 3
+    },
+    {
+      "at": "2026-08-22T05:28:28.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_READY",
+      "rebuyPassed": 4
+    },
+    {
+      "at": "2026-08-22T05:29:08.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 1,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 3
+    },
+    {
+      "at": "2026-08-22T05:30:51.999Z",
+      "sellStage": "SELL_READY",
+      "sellPassed": 4,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    },
+    {
+      "at": "2026-08-22T05:31:00.999Z",
+      "sellStage": "NEWS_ARMED",
+      "sellPassed": 3,
+      "rebuyStage": "REBUY_WAIT",
+      "rebuyPassed": 2
+    }
+  ],
+  "conclusion": {
+    "outputBasis": "CEX_REFERENCE",
+    "executionReceipt": "UNKNOWN:not_recorded",
+    "dexRealizability": "UNKNOWN:not_measured",
+    "economicEvidence": "POSITIVE_EV_NOT_PROVEN",
+    "oldV02ConclusionPreservedAt": "tests/fixtures/2026-08-22/analysis.json",
+    "status": "V3_SHADOW_SIGNAL_REPRODUCED_WITH_SPOT_ONLY_INPUTS"
+  },
+  "reportHashBasis": "sha256:7d3dd6fc02184e8b985776cba6eab7077ee06441db8b3be09bd106865756b8e3"
+}

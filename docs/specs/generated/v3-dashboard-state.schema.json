@@ -1,0 +1,1112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "REPLAY",
+        "SHADOW",
+        "LIVE_READ_ONLY"
+      ]
+    },
+    "asOf": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "evidenceLevel": {
+      "type": "string",
+      "enum": [
+        "REPOSITORY_RECORD",
+        "TESTED",
+        "VERIFIED_CURRENT"
+      ]
+    },
+    "economicEvidence": {
+      "type": "string",
+      "const": "POSITIVE_EV_NOT_PROVEN"
+    },
+    "outputBasis": {
+      "type": "string",
+      "const": "CEX_REFERENCE"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "WARMUP_FIXTURE",
+        "LIVE_TWO_SOURCE_RUNTIME",
+        "V3_REPLAY"
+      ]
+    },
+    "boundaryNotice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "techflow": {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "enum": [
+                "techflow-public-newsletter",
+                "binance-spot-public"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "NEWS",
+                "MARKET"
+              ]
+            },
+            "capabilityState": {
+              "type": "string",
+              "enum": [
+                "PLANNED",
+                "TESTED",
+                "VERIFIED_CURRENT",
+                "UNSUPPORTED"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "WARMING_UP",
+                "HEALTHY",
+                "DEGRADED",
+                "STALE",
+                "ERROR",
+                "UNSUPPORTED"
+              ]
+            },
+            "transport": {
+              "type": "string",
+              "enum": [
+                "PUBLIC_WEBPAGE",
+                "SPOT_WEBSOCKET"
+              ]
+            },
+            "endpoint": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lastAttemptAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "lastSuccessAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "dataAgeMs": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "messagesReceived": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "uniqueItems": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "duplicates": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "gaps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reconnects": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "errorCode": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "sourceId",
+            "label",
+            "category",
+            "capabilityState",
+            "status",
+            "transport",
+            "endpoint",
+            "lastAttemptAt",
+            "lastSuccessAt",
+            "dataAgeMs",
+            "messagesReceived",
+            "uniqueItems",
+            "duplicates",
+            "gaps",
+            "reconnects",
+            "errorCode",
+            "reason",
+            "evidenceIds"
+          ],
+          "additionalProperties": false
+        },
+        "binance": {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "enum": [
+                "techflow-public-newsletter",
+                "binance-spot-public"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "NEWS",
+                "MARKET"
+              ]
+            },
+            "capabilityState": {
+              "type": "string",
+              "enum": [
+                "PLANNED",
+                "TESTED",
+                "VERIFIED_CURRENT",
+                "UNSUPPORTED"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "WARMING_UP",
+                "HEALTHY",
+                "DEGRADED",
+                "STALE",
+                "ERROR",
+                "UNSUPPORTED"
+              ]
+            },
+            "transport": {
+              "type": "string",
+              "enum": [
+                "PUBLIC_WEBPAGE",
+                "SPOT_WEBSOCKET"
+              ]
+            },
+            "endpoint": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lastAttemptAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "lastSuccessAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "dataAgeMs": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "messagesReceived": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "uniqueItems": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "duplicates": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "gaps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reconnects": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "errorCode": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "sourceId",
+            "label",
+            "category",
+            "capabilityState",
+            "status",
+            "transport",
+            "endpoint",
+            "lastAttemptAt",
+            "lastSuccessAt",
+            "dataAgeMs",
+            "messagesReceived",
+            "uniqueItems",
+            "duplicates",
+            "gaps",
+            "reconnects",
+            "errorCode",
+            "reason",
+            "evidenceIds"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "techflow",
+        "binance"
+      ],
+      "additionalProperties": false
+    },
+    "latestMacroEvent": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "observationId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sourceId": {
+              "type": "string",
+              "const": "techflow-public-newsletter"
+            },
+            "sourceItemId": {
+              "type": "string",
+              "pattern": "^\\d+$"
+            },
+            "sourceUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "originalUrl": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uri"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bodyExcerpt": {
+              "type": "string"
+            },
+            "sourceAttribution": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "sourceOccurredAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "receivedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "accessedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "updatedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "rawTextHash": {
+              "type": "string",
+              "pattern": "^(?:sha256|keccak256):[0-9a-f]{64}$"
+            },
+            "eventType": {
+              "type": "string",
+              "enum": [
+                "MONETARY_MACRO",
+                "TRADE_SANCTIONS",
+                "GEOPOLITICS",
+                "FINANCIAL_STABILITY",
+                "ENERGY_SUPPLY",
+                "CRYPTO_POLICY",
+                "OTHER",
+                "UNKNOWN"
+              ]
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "countries": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "direction": {
+              "type": "string",
+              "enum": [
+                "RISK_OFF",
+                "RISK_ON",
+                "NEUTRAL",
+                "UNKNOWN"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "SYSTEMIC",
+                "UNKNOWN"
+              ]
+            },
+            "scheduledState": {
+              "type": "string",
+              "enum": [
+                "SCHEDULED",
+                "UNSCHEDULED",
+                "UNKNOWN"
+              ]
+            },
+            "macroRelevant": {
+              "type": "boolean"
+            },
+            "classificationReason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "schemaVersion": {
+              "type": "string",
+              "const": "3.0.0"
+            }
+          },
+          "required": [
+            "observationId",
+            "sourceId",
+            "sourceItemId",
+            "sourceUrl",
+            "originalUrl",
+            "headline",
+            "bodyExcerpt",
+            "sourceAttribution",
+            "categories",
+            "sourceOccurredAt",
+            "receivedAt",
+            "accessedAt",
+            "updatedAt",
+            "revision",
+            "rawTextHash",
+            "eventType",
+            "entities",
+            "countries",
+            "direction",
+            "severity",
+            "scheduledState",
+            "macroRelevant",
+            "classificationReason",
+            "schemaVersion"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "market": {
+      "minItems": 4,
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "string",
+            "enum": [
+              "BTC",
+              "ETH",
+              "SOL",
+              "VIRTUAL"
+            ]
+          },
+          "symbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "return60s": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dataAgeMs": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "freshness": {
+            "type": "string",
+            "enum": [
+              "FRESH",
+              "STALE",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "asset",
+          "symbol",
+          "price",
+          "return60s",
+          "dataAgeMs",
+          "freshness"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sell": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": [
+            "SELL",
+            "REBUY"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "NO_ACTION",
+            "NEWS_ARMED",
+            "MARKET_ARMED",
+            "SELL_READY",
+            "REBUY_WAIT",
+            "REBUY_READY",
+            "DATA_UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        },
+        "output": {
+          "type": "string",
+          "enum": [
+            "NO_ACTION",
+            "WATCH",
+            "SHADOW_CANDIDATE",
+            "CEX_REFERENCE_READY"
+          ]
+        },
+        "outputBasis": {
+          "type": "string",
+          "const": "CEX_REFERENCE"
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "required": {
+          "type": "number",
+          "const": 4
+        },
+        "conditions": {
+          "minItems": 4,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "UNKNOWN",
+                  "STALE"
+                ]
+              },
+              "current": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gap": {
+                "type": "string",
+                "minLength": 1
+              },
+              "progress": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationSeconds": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "techflow-public-newsletter",
+                  "binance-spot-public"
+                ]
+              },
+              "dataAgeMs": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "state",
+              "current",
+              "target",
+              "gap",
+              "progress",
+              "durationSeconds",
+              "source",
+              "dataAgeMs",
+              "reason",
+              "evidenceIds"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "nextGap": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extremeMarketFallback": {
+          "type": "string",
+          "enum": [
+            "NOT_USED",
+            "NOT_CALIBRATED",
+            "UNKNOWN"
+          ]
+        },
+        "sellContext": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "SHADOW_REFERENCE",
+            "USER_RECORDED"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "model",
+        "stage",
+        "output",
+        "outputBasis",
+        "passed",
+        "required",
+        "conditions",
+        "nextGap",
+        "extremeMarketFallback",
+        "sellContext",
+        "reason",
+        "evidenceIds"
+      ],
+      "additionalProperties": false
+    },
+    "rebuy": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": [
+            "SELL",
+            "REBUY"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "NO_ACTION",
+            "NEWS_ARMED",
+            "MARKET_ARMED",
+            "SELL_READY",
+            "REBUY_WAIT",
+            "REBUY_READY",
+            "DATA_UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        },
+        "output": {
+          "type": "string",
+          "enum": [
+            "NO_ACTION",
+            "WATCH",
+            "SHADOW_CANDIDATE",
+            "CEX_REFERENCE_READY"
+          ]
+        },
+        "outputBasis": {
+          "type": "string",
+          "const": "CEX_REFERENCE"
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "required": {
+          "type": "number",
+          "const": 4
+        },
+        "conditions": {
+          "minItems": 4,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "UNKNOWN",
+                  "STALE"
+                ]
+              },
+              "current": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gap": {
+                "type": "string",
+                "minLength": 1
+              },
+              "progress": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationSeconds": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "techflow-public-newsletter",
+                  "binance-spot-public"
+                ]
+              },
+              "dataAgeMs": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "state",
+              "current",
+              "target",
+              "gap",
+              "progress",
+              "durationSeconds",
+              "source",
+              "dataAgeMs",
+              "reason",
+              "evidenceIds"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "nextGap": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extremeMarketFallback": {
+          "type": "string",
+          "enum": [
+            "NOT_USED",
+            "NOT_CALIBRATED",
+            "UNKNOWN"
+          ]
+        },
+        "sellContext": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "SHADOW_REFERENCE",
+            "USER_RECORDED"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "model",
+        "stage",
+        "output",
+        "outputBasis",
+        "passed",
+        "required",
+        "conditions",
+        "nextGap",
+        "extremeMarketFallback",
+        "sellContext",
+        "reason",
+        "evidenceIds"
+      ],
+      "additionalProperties": false
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "SOURCE",
+              "NEWS",
+              "MARKET",
+              "SELL",
+              "REBUY",
+              "GAP",
+              "SYSTEM"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "eventId",
+          "at",
+          "kind",
+          "message",
+          "evidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "mode",
+    "asOf",
+    "evidenceLevel",
+    "economicEvidence",
+    "outputBasis",
+    "source",
+    "boundaryNotice",
+    "sources",
+    "latestMacroEvent",
+    "market",
+    "sell",
+    "rebuy",
+    "timeline"
+  ],
+  "additionalProperties": false,
+  "$id": "https://virtual-risk.local/schema/v3-dashboard-state.v1.json"
+}

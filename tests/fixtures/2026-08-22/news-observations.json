@@ -1,0 +1,242 @@
+[
+  {
+    "observationId": "news-ap-canada-tariffs-20260822",
+    "sourceId": "ap-news",
+    "sourceItemId": "857ef76b20a766e370d70176135b678e",
+    "sourceUrl": "https://apnews.com/article/857ef76b20a766e370d70176135b678e",
+    "sourceTier": "T1",
+    "headline": "US imposes 50% tariffs on Canadian products, and Canada says it will retaliate",
+    "language": "en",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T03:40:55.000Z",
+      "observedAt": "2026-08-22T03:43:45.000Z",
+      "evidenceIds": ["https://apnews.com/article/857ef76b20a766e370d70176135b678e"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T03:43:45.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:1556b10ecb004dd1d834b1f7696234e2f20cd0d50acb82cdfdb5acd70c672fcb",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T03:43:45.000Z",
+      "evidenceIds": ["https://apnews.com/article/857ef76b20a766e370d70176135b678e"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["Canada", "United States", "Mark Carney", "tariffs"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-jin10-canada-tariffs-20260822",
+    "sourceId": "jin10",
+    "sourceItemId": "20260822114345108800",
+    "sourceUrl": "https://flash.jin10.com/detail/20260822114345108800",
+    "sourceTier": "T1",
+    "headline": "加拿大总理卡尼称美加贸易谈判暂停并将对等反制",
+    "language": "zh-CN",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T03:43:45.000Z",
+      "observedAt": "2026-08-22T03:43:45.000Z",
+      "evidenceIds": ["https://flash.jin10.com/detail/20260822114345108800"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T03:43:45.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:05c5cbcce20989557fd2178e7f9d142c5208d9d0d291b5e20c3d975b2fe105e2",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T03:43:45.000Z",
+      "evidenceIds": ["https://flash.jin10.com/detail/20260822114345108800"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["加拿大", "美国", "Mark Carney", "关税"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-carney-x-canada-tariffs-20260822",
+    "sourceId": "mark-carney-x",
+    "sourceItemId": "2091008744427598021",
+    "sourceUrl": "https://x.com/MarkJCarney/status/2091008744427598021",
+    "sourceTier": "T0",
+    "headline": "Canada will match the tariffs dollar for dollar to protect workers and businesses",
+    "language": "en",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T03:45:08.000Z",
+      "observedAt": "2026-08-22T03:45:08.000Z",
+      "evidenceIds": ["https://x.com/MarkJCarney/status/2091008744427598021"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T03:45:08.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:80965de12571597ca7cc9e9bdb171427e315be5a869a2d7f048b3e790d12346b",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T03:45:08.000Z",
+      "evidenceIds": ["https://x.com/MarkJCarney/status/2091008744427598021"]
+    },
+    "credibilityState": "VERIFIED",
+    "entities": ["Canada", "United States", "Mark Carney", "tariffs"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-watcher-guru-canada-tariffs-20260822",
+    "sourceId": "watcher-guru-x",
+    "sourceItemId": "2091012631746224276",
+    "sourceUrl": "https://x.com/WatcherGuru/status/2091012631746224276",
+    "sourceTier": "T3",
+    "headline": "Canada pauses US trade talks and announces reciprocal tariffs",
+    "language": "en",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T04:00:35.000Z",
+      "observedAt": "2026-08-22T04:00:35.000Z",
+      "evidenceIds": ["https://x.com/WatcherGuru/status/2091012631746224276"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T04:00:35.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:3c955144dab00f6fa515eb25d47f02d94fe95f7c7c0b352a2a315f5b64a434f8",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T04:00:35.000Z",
+      "evidenceIds": ["https://x.com/WatcherGuru/status/2091012631746224276"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["Canada", "United States", "tariffs"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-techflow-canada-tariffs-20260822",
+    "sourceId": "techflow",
+    "sourceItemId": "133044",
+    "sourceUrl": "https://www.techflowpost.com/newsletter/133044",
+    "sourceTier": "T2",
+    "headline": "TechFlow 转述金十的加拿大关税快讯",
+    "language": "zh-CN",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T04:02:19.000Z",
+      "observedAt": "2026-08-22T04:02:19.000Z",
+      "evidenceIds": ["https://www.techflowpost.com/newsletter/133044"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T04:02:19.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:dbdaa7d7e0f65edd0f9a866bc0da0caf3ba2a59b38e96e5e69aa5fc09304aaa6",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T04:02:19.000Z",
+      "evidenceIds": ["https://www.techflowpost.com/newsletter/133044"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["加拿大", "美国", "金十", "关税"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-axios-canada-tariffs-20260822",
+    "sourceId": "axios",
+    "sourceItemId": "us-canada-tariffs-trade-trump-carney",
+    "sourceUrl": "https://www.axios.com/2026/08/22/us-canada-tariffs-trade-trump-carney",
+    "sourceTier": "T1",
+    "headline": "U.S.-Canada trade talks collapse, 50% tariffs go into effect",
+    "language": "en",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T04:50:24.000Z",
+      "observedAt": "2026-08-22T04:50:24.000Z",
+      "evidenceIds": ["https://www.axios.com/2026/08/22/us-canada-tariffs-trade-trump-carney"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T04:50:24.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:89e5fc02b909324e269a4fb4b01fd3aff8169f455b9a890fe1038e1a1fa239e3",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T04:50:24.000Z",
+      "evidenceIds": ["https://www.axios.com/2026/08/22/us-canada-tariffs-trade-trump-carney"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["Canada", "United States", "Donald Trump", "Mark Carney", "tariffs"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-unusual-whales-canada-tariffs-20260822",
+    "sourceId": "unusual-whales-x",
+    "sourceItemId": "2091028641279054053",
+    "sourceUrl": "https://x.com/unusual_whales/status/2091028641279054053",
+    "sourceTier": "T3",
+    "headline": "Second social amplification of the Canada tariff conflict",
+    "language": "en",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T05:04:12.000Z",
+      "observedAt": "2026-08-22T05:04:12.000Z",
+      "evidenceIds": ["https://x.com/unusual_whales/status/2091028641279054053"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T05:04:12.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:0b764f9169949d9206c87778fb86d63e11dcff06b708f2eb2d06559053e4a842",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observedAt": "2026-08-22T05:04:12.000Z",
+      "evidenceIds": ["https://x.com/unusual_whales/status/2091028641279054053"]
+    },
+    "credibilityState": "CORROBORATED",
+    "entities": ["Canada", "United States", "tariffs"],
+    "schemaVersion": "1.0.0"
+  },
+  {
+    "observationId": "news-jin10-iran-military-20260822",
+    "sourceId": "jin10",
+    "sourceItemId": "20260822131227792800",
+    "sourceUrl": "https://flash.jin10.com/detail/20260822131227792800",
+    "sourceTier": "T1",
+    "headline": "金十伊朗军事言论快讯",
+    "language": "zh-CN",
+    "revision": 0,
+    "ingestionMethod": "HISTORICAL_FIXTURE",
+    "sourceOccurredAt": {
+      "state": "KNOWN",
+      "value": "2026-08-22T05:12:27.000Z",
+      "observedAt": "2026-08-22T05:12:27.000Z",
+      "evidenceIds": ["https://flash.jin10.com/detail/20260822131227792800"]
+    },
+    "sourceOccurredAtPrecision": "SECOND",
+    "receivedAt": "2026-08-22T05:12:27.000Z",
+    "accessedAt": "2026-08-22T08:59:06.000Z",
+    "rawTextHash": "sha256:19ffac09673b117c91e4d6f135720c04416714fb6178c568fa577d64cac335ae",
+    "claimFingerprint": {
+      "state": "KNOWN",
+      "value": "iran-military-geopolitical-risk-statement",
+      "observedAt": "2026-08-22T05:12:27.000Z",
+      "evidenceIds": ["https://flash.jin10.com/detail/20260822131227792800"]
+    },
+    "credibilityState": "UNVERIFIED",
+    "entities": ["伊朗", "军事", "地缘政治"],
+    "schemaVersion": "1.0.0"
+  }
+]

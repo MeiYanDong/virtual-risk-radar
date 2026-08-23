@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "modelVersion": "0.1.0",
+  "configVersion": "0.2.0",
+  "effectiveAt": "2026-08-22T12:20:44.337Z",
+  "mode": "REPLAY",
+  "economicEvidence": "POSITIVE_EV_NOT_PROVEN",
+  "time": {
+    "internalTimezone": "UTC",
+    "uiTimezone": "Asia/Shanghai",
+    "maximumClockDriftMs": 1000
+  },
+  "retention": {
+    "rawDays": 180,
+    "decisionSnapshots": "LONG_TERM",
+    "cleanupMode": "DRY_RUN_ONLY"
+  },
+  "tacticalSleeve": {
+    "state": "UNSET",
+    "scenariosPct": ["0.1", "0.2", "0.4"],
+    "sellTranchesPct": ["0.25", "0.75"],
+    "rebuyTranchesPct": ["0.5", "0.5"]
+  },
+  "news": {
+    "authority": "AUXILIARY",
+    "marketOnlyPath": "ENABLED_STRICT",
+    "observationWindowSeconds": 7200,
+    "publicSourcesFirst": true
+  },
+  "market": {
+    "assets": ["BTC", "ETH", "SOL", "VIRTUAL"],
+    "sell": {
+      "fixedReturn60s": {
+        "BTC": "-0.001",
+        "ETH": "-0.0015",
+        "SOL": "-0.005",
+        "VIRTUAL": "-0.0025"
+      },
+      "volatilityMultiplier": { "BTC": "2", "ETH": "2", "SOL": "2", "VIRTUAL": "2" },
+      "robustSigmaLookbackSeconds": 3600,
+      "marketArmBreadth": 2,
+      "broadMarketVolumeAnomalyMinimum": "1.5",
+      "virtualSellRatioMaximum": "0.6",
+      "virtualSellPersistenceSeconds": 3
+    },
+    "rebuy": {
+      "noNewLowSeconds": 300,
+      "oiContractsDeclineMinimumPct": "-0.05",
+      "virtualBuySellRatioMinimum": "1.1",
+      "orderFlowPersistenceSeconds": 30,
+      "btcReturn60sMinimum": "-0.001",
+      "solReturn60sMinimum": "-0.003",
+      "marketStabilitySeconds": 30,
+      "secondTrancheStabilitySeconds": 300
+    }
+  },
+  "quoteLimits": { "state": "UNSET", "reason": "Historical v0.2 research configuration" },
+  "quoteResearch": {
+    "mode": "FIXED_TEST_AMOUNTS",
+    "fixedSellAmountsVirtual": ["1000", "5000", "10000"],
+    "settlementAssetSymbol": "USDC",
+    "settlementAssetAddress": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "researchSlippageBps": "50",
+    "maximumCrossSourceDeviationBps": "100",
+    "quoteExpirySeconds": 5,
+    "maximumBlockLag": 2,
+    "rpcEndpoint": "https://base-rpc.publicnode.com",
+    "aggregatorProviderId": "velora-prices-v6.2",
+    "canonicalPoolProviderId": "uniswap-v3-direct-pool",
+    "canonicalPoolAddress": "0x529d2863a1521d0b57db028168fdE2E97120017C",
+    "canonicalPoolFee": 3000,
+    "canonicalPoolFactoryAddress": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+    "canonicalQuoterAddress": "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a"
+  },
+  "chains": {
+    "base": {
+      "chainProfileId": "base-mainnet-virtual-usdc-research-v1",
+      "networkScope": "eip155:8453",
+      "chainId": "8453",
+      "candidateVirtualTokenAddress": "0x0b3e328455c4059eeb9e3f84b5543f74e24e7e1b",
+      "identityState": "VERIFIED_CURRENT",
+      "quoteAdapterState": "VERIFIED_CURRENT"
+    },
+    "robinhood": {
+      "chainProfileId": "robinhood-unknown-v1",
+      "networkScope": "robinhood:UNKNOWN",
+      "chainId": "UNKNOWN",
+      "identityState": "UNKNOWN",
+      "quoteAdapterState": "PLANNED"
+    }
+  }
+}

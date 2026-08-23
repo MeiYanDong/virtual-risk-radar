@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "modelVersion": "0.1.0",
+  "sell": {
+    "initial": "SELL_IDLE",
+    "states": [
+      "SELL_IDLE",
+      "NEWS_ARMED",
+      "MARKET_ARMED",
+      "SELL_PRETRIGGER",
+      "SELL_CONFIRMED",
+      "SELL_COOLDOWN",
+      "REBUY_WAIT",
+      "DATA_BLOCKED"
+    ],
+    "transitions": [
+      { "from": "SELL_IDLE", "to": "NEWS_ARMED", "guard": "qualified_news_context" },
+      { "from": "SELL_IDLE", "to": "MARKET_ARMED", "guard": "strict_market_context" },
+      { "from": "NEWS_ARMED", "to": "SELL_PRETRIGGER", "guard": "cross_asset_shock" },
+      { "from": "MARKET_ARMED", "to": "SELL_PRETRIGGER", "guard": "cross_asset_shock" },
+      {
+        "from": "SELL_PRETRIGGER",
+        "to": "SELL_CONFIRMED",
+        "guard": "virtual_sell_flow_persistent"
+      },
+      {
+        "from": "SELL_PRETRIGGER",
+        "to": "SELL_IDLE",
+        "guard": "risk_context_expired_and_signal_recovered"
+      },
+      { "from": "SELL_CONFIRMED", "to": "SELL_COOLDOWN", "guard": "candidate_snapshot_recorded" },
+      {
+        "from": "SELL_COOLDOWN",
+        "to": "SELL_CONFIRMED",
+        "guard": "risk_re_escalated_with_remaining_sleeve"
+      },
+      { "from": "SELL_COOLDOWN", "to": "REBUY_WAIT", "guard": "dex_backed_sell_fact_recorded" },
+      {
+        "from": "NEWS_ARMED",
+        "to": "SELL_IDLE",
+        "guard": "news_expired_without_market_confirmation"
+      },
+      { "from": "MARKET_ARMED", "to": "SELL_IDLE", "guard": "market_anomaly_cleared" },
+      { "from": "DATA_BLOCKED", "to": "SELL_IDLE", "guard": "data_recovered_and_no_risk_context" },
+      { "from": "DATA_BLOCKED", "to": "NEWS_ARMED", "guard": "data_recovered_with_news_context" },
+      {
+        "from": "DATA_BLOCKED",
+        "to": "MARKET_ARMED",
+        "guard": "data_recovered_with_market_context"
+      }
+    ],
+    "globalTransitions": [
+      { "from": "*", "to": "DATA_BLOCKED", "guard": "critical_data_gate_not_pass" }
+    ],
+    "requiredConditionDenominator": 4,
+    "hardGates": ["data_health", "asset_identity", "economic_evidence"],
+    "validationMaximumAction": "SHADOW_CANDIDATE"
+  },
+  "rebuy": {
+    "initial": "REBUY_INACTIVE",
+    "states": [
+      "REBUY_INACTIVE",
+      "REBUY_WAIT",
+      "REBUY_ARMED",
+      "REBUY_TRANCHE_1",
+      "REBUY_TRANCHE_2_WAIT",
+      "REBUY_COMPLETE",
+      "REBUY_VETOED"
+    ],
+    "transitions": [
+      { "from": "REBUY_INACTIVE", "to": "REBUY_WAIT", "guard": "dex_backed_sell_fact_recorded" },
+      {
+        "from": "REBUY_WAIT",
+        "to": "REBUY_ARMED",
+        "guard": "at_least_three_market_recovery_conditions_pass"
+      },
+      {
+        "from": "REBUY_ARMED",
+        "to": "REBUY_TRANCHE_1",
+        "guard": "b1_through_b5_and_all_gates_pass"
+      },
+      {
+        "from": "REBUY_TRANCHE_1",
+        "to": "REBUY_TRANCHE_2_WAIT",
+        "guard": "first_tranche_fact_recorded"
+      },
+      {
+        "from": "REBUY_TRANCHE_2_WAIT",
+        "to": "REBUY_COMPLETE",
+        "guard": "five_more_minutes_stable_and_b5_pass"
+      },
+      { "from": "REBUY_ARMED", "to": "REBUY_WAIT", "guard": "new_low_or_market_re_deterioration" },
+      {
+        "from": "REBUY_TRANCHE_2_WAIT",
+        "to": "REBUY_WAIT",
+        "guard": "new_low_flow_deterioration_or_cost_block"
+      },
+      {
+        "from": "REBUY_VETOED",
+        "to": "REBUY_WAIT",
+        "guard": "new_revision_proves_permanent_damage_pass"
+      }
+    ],
+    "globalTransitions": [
+      { "from": "*", "to": "REBUY_VETOED", "guard": "permanent_damage_not_pass" }
+    ],
+    "requiredConditionDenominator": 5,
+    "hardGates": [
+      "data_health",
+      "permanent_damage",
+      "asset_identity",
+      "sell_fact_budget",
+      "economic_evidence"
+    ],
+    "validationMaximumAction": "SHADOW_CANDIDATE"
+  },
+  "chainActionStates": [
+    "SIGNAL_NOT_READY",
+    "QUOTE_PENDING",
+    "ACTIONABLE_WITH_EVIDENCE",
+    "SHADOW_CANDIDATE",
+    "BLOCKED_DATA",
+    "BLOCKED_IDENTITY",
+    "BLOCKED_COST",
+    "BLOCKED_LIQUIDITY",
+    "UNSUPPORTED",
+    "UNKNOWN"
+  ],
+  "noActionIsFormalOutput": true
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-08-23T10:15:18.000Z",
+  "captureMethod": "Public HTML inspected through web-access and reduced to the minimum parser-relevant fragment",
+  "privacy": "No authentication, cookies, private endpoint, account data, or redistribution API",
+  "files": [
+    {
+      "path": "list.html",
+      "sourceUrl": "https://www.techflowpost.com/newsletter",
+      "sha256": "21355cd5f7add8192ad694bf2af3ebdf29a93e244be3f705a970486499883bef",
+      "scope": "Two public newsletter list items and their embedded server-rendered fields"
+    },
+    {
+      "path": "detail-133124.html",
+      "sourceUrl": "https://www.techflowpost.com/newsletter/133124",
+      "sha256": "73ee230bb6fb15adeba59b6ffd4d93c8ec51997ac90f7b70c2a2dac19e3313e3",
+      "scope": "One public newsletter detail and its original-link evidence"
+    }
+  ]
+}

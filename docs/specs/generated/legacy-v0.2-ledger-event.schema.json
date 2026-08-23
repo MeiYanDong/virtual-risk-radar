@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parentEventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "SOURCE_OBSERVED",
+        "SOURCE_GAP_DETECTED",
+        "NEWS_CLUSTER_CREATED",
+        "FEATURE_SNAPSHOT_CREATED",
+        "CONDITION_EVALUATED",
+        "STAGE_CHANGED",
+        "QUOTE_REQUESTED",
+        "QUOTE_OBSERVED",
+        "QUOTE_EXPIRED",
+        "DECISION_CREATED",
+        "NOTIFICATION_SENT",
+        "OPERATOR_ACKNOWLEDGED",
+        "OPERATOR_MARKED_EXECUTED",
+        "SHADOW_FILL_CREATED",
+        "MODEL_VERSION_CHANGED",
+        "CONFIG_CHANGED",
+        "CORRECTION_APPENDED"
+      ]
+    },
+    "ingestionSequence": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "eventTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "payloadHash": {
+      "type": "string",
+      "pattern": "^(?:sha256|keccak256):[0-9a-f]{64}$"
+    },
+    "evidenceLevel": {
+      "type": "string",
+      "enum": [
+        "PLANNED",
+        "REPOSITORY_RECORD",
+        "TESTED",
+        "HISTORICAL_REFERENCE",
+        "HISTORICAL_RECEIPT",
+        "VERIFIED_CURRENT",
+        "UNKNOWN"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "eventId",
+    "eventType",
+    "ingestionSequence",
+    "source",
+    "schemaVersion",
+    "eventTime",
+    "observedAt",
+    "payloadHash",
+    "evidenceLevel",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "$id": "https://virtual-risk.local/schema/legacy-v0.2-ledger-event.v1.json"
+}

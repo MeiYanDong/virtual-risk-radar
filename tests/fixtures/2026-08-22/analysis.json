@@ -1,0 +1,142 @@
+{
+  "reportId": "virtual-risk-2026-08-22-analysis-v1",
+  "evidenceLevel": "HISTORICAL_RECEIPT",
+  "rawManifestChecksum": "sha256:7d3dd6fc02184e8b985776cba6eab7077ee06441db8b3be09bd106865756b8e3",
+  "formulaVersion": "fixture-audit-v1",
+  "rules": {
+    "sellShock": {
+      "BTC": "return60s <= -0.001",
+      "SOL": "return60s <= -0.005",
+      "VIRTUAL": "return60s <= -0.0025"
+    },
+    "sellFlow": "VIRTUAL futures taker buy/sell ratio <= 0.6 for at least 3 seconds",
+    "noNewLow": "300 seconds from the latest running event low",
+    "oiFlush": "contracts change from latest fresh snapshot before risk arm <= -0.05",
+    "recoveryFlow": "VIRTUAL futures taker buy/sell ratio >= 1.1 for at least 30 seconds",
+    "broadStability": "BTC return60s >= -0.001 and SOL return60s >= -0.003 for at least 30 seconds"
+  },
+  "availabilityBoundary": {
+    "replaySort": "received_at then source sequence then ingestion sequence",
+    "futureReadsAllowed": false,
+    "riskArmedAt": "2026-08-22T03:43:45.000Z",
+    "dexQuotes": {
+      "base": "UNKNOWN:not_recorded",
+      "robinhood": "UNKNOWN:not_recorded"
+    },
+    "executionReceipt": "UNKNOWN:not_recorded",
+    "economicEvidence": "POSITIVE_EV_NOT_PROVEN"
+  },
+  "plannedTimeMetrics": [
+    {
+      "at": "2026-08-22T05:05:01.000Z",
+      "return60s": {
+        "BTC": "-0.00052072723568954980648",
+        "ETH": "-0.00046485386901450979769",
+        "SOL": "-0.0025057632554876215295",
+        "VIRTUAL": "-0.00078636959370904325033"
+      },
+      "virtualFuturesTakerFlow60s": {
+        "buyNotional": "9128.9907",
+        "sellNotional": "7791.11787",
+        "buySellRatio": "1.1717176985797546405",
+        "records": 98,
+        "makerFlagMapping": "m=true means buyer is maker, therefore taker side is SELL"
+      }
+    },
+    {
+      "at": "2026-08-22T05:07:13.000Z",
+      "return60s": {
+        "BTC": "-0.00083509960444527200151",
+        "ETH": "-0.0010567632850241545894",
+        "SOL": "-0.0041177061363864617857",
+        "VIRTUAL": "-0.0035433070866141732283"
+      },
+      "virtualFuturesTakerFlow60s": {
+        "buyNotional": "5082.05437",
+        "sellNotional": "16245.38412",
+        "buySellRatio": "0.31283066823537811182",
+        "records": 114,
+        "makerFlagMapping": "m=true means buyer is maker, therefore taker side is SELL"
+      }
+    },
+    {
+      "at": "2026-08-22T05:24:44.000Z",
+      "return60s": {
+        "BTC": "0.0013501329674439218752",
+        "ETH": "0.0015394684306066081888",
+        "SOL": "0.00053453068206115031003",
+        "VIRTUAL": "0.0037453183520599250936"
+      },
+      "virtualFuturesTakerFlow60s": {
+        "buyNotional": "111995.93673",
+        "sellNotional": "91149.86488",
+        "buySellRatio": "1.228701072431035731",
+        "records": 1064,
+        "makerFlagMapping": "m=true means buyer is maker, therefore taker side is SELL"
+      }
+    },
+    {
+      "at": "2026-08-22T05:29:44.000Z",
+      "return60s": {
+        "BTC": "0.00023688880005019817281",
+        "ETH": "-0.00037713109814836829311",
+        "SOL": "-0.00021260763261401084299",
+        "VIRTUAL": "0.00014275517487508922198"
+      },
+      "virtualFuturesTakerFlow60s": {
+        "buyNotional": "28851.76825",
+        "sellNotional": "46655.85106",
+        "buySellRatio": "0.61839549798151297511",
+        "records": 389,
+        "makerFlagMapping": "m=true means buyer is maker, therefore taker side is SELL"
+      }
+    }
+  ],
+  "verifiedMarketTimeline": {
+    "newsArmedAt": "2026-08-22T03:43:45.000Z",
+    "firstSellPretriggerAt": "2026-08-22T05:05:06.999Z",
+    "firstSellConfirmedAt": "2026-08-22T05:07:16.999Z",
+    "eventLow": {
+      "at": "2026-08-22T05:11:13.949Z",
+      "price": "0.62600000",
+      "source": "Binance Spot VIRTUALUSDT aggregate trade"
+    },
+    "noNewLowConditionFirstPassAt": "2026-08-22T05:16:13.949Z",
+    "orderFlowRecoveryFirstPassAt": "2026-08-22T05:16:09.999Z",
+    "broadMarketStabilityFirstPassAt": "2026-08-22T05:12:25.999Z"
+  },
+  "oiAudit": {
+    "validRiskArmBaseline": {
+      "at": "2026-08-22T03:40:00.000Z",
+      "contracts": "24008321.60000000"
+    },
+    "minimumObservedChange": {
+      "at": "2026-08-22T05:25:00.000Z",
+      "contracts": "22876213.70000000",
+      "changeFromRiskArmBaselinePct": "-0.047154812354729536779"
+    },
+    "fivePercentFlushEverPassed": false,
+    "at1320": {
+      "at": "2026-08-22T05:20:00.000Z",
+      "contracts": "22998988.00000000",
+      "validBaselineChangePct": "-0.042040989654187238145",
+      "invalidFutureBaselineChangePct": "-0.066147375201163751758",
+      "invalidFutureBaselineAt": "2026-08-22T05:05:00.000Z"
+    },
+    "conclusion": "The 5% OI flush never passes with the frozen pre-risk-arm baseline. Using the later pretrigger baseline would be a future-data violation."
+  },
+  "replayConclusion": {
+    "previousExpectedTimelineStatus": "FALSIFIED_BY_CAPTURED_DATA",
+    "correctedSellTimesLater": {
+      "pretriggerMilliseconds": 5999,
+      "confirmedMilliseconds": 3999
+    },
+    "rebuyActionStatus": "BLOCKED",
+    "rebuyBlockers": [
+      "No DEX-backed sell fact exists",
+      "The valid OI flush condition never reaches 5%",
+      "Base and Robinhood historical DEX quotes were not recorded"
+    ],
+    "maximumActionLevel": "NO_ACTION_WITH_MARKET_STAGE_VISIBILITY"
+  }
+}

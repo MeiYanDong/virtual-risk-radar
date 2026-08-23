@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.1.0"
+    },
+    "modelVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effectiveAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "REPLAY",
+        "SHADOW",
+        "LIVE_READ_ONLY"
+      ]
+    },
+    "economicEvidence": {
+      "type": "string",
+      "const": "POSITIVE_EV_NOT_PROVEN"
+    },
+    "outputBasis": {
+      "type": "string",
+      "const": "CEX_REFERENCE"
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "internalTimezone": {
+          "type": "string",
+          "const": "UTC"
+        },
+        "uiTimezone": {
+          "type": "string",
+          "const": "Asia/Shanghai"
+        },
+        "maximumClockDriftMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "internalTimezone",
+        "uiTimezone",
+        "maximumClockDriftMs"
+      ],
+      "additionalProperties": false
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "readOnly": {
+          "type": "boolean",
+          "const": true
+        },
+        "signing": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "broadcast": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "walletRead": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "rpc": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "dexQuote": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        }
+      },
+      "required": [
+        "readOnly",
+        "signing",
+        "broadcast",
+        "walletRead",
+        "rpc",
+        "dexQuote"
+      ],
+      "additionalProperties": false
+    },
+    "retention": {
+      "type": "object",
+      "properties": {
+        "rawDays": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "cursorPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "journalPath": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "rawDays",
+        "cursorPath",
+        "journalPath"
+      ],
+      "additionalProperties": false
+    },
+    "newsSource": {
+      "type": "object",
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "const": "techflow-public-newsletter"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https:\\/\\/www\\.techflowpost\\.com\\/newsletter.*"
+        },
+        "accessMethod": {
+          "type": "string",
+          "const": "PUBLIC_WEBPAGE"
+        },
+        "cost": {
+          "type": "string",
+          "const": "FREE"
+        },
+        "pollIntervalMs": {
+          "type": "integer",
+          "minimum": 5000,
+          "maximum": 9007199254740991
+        },
+        "requestTimeoutMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "freshnessSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "macroArmWindowSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxItemsPerPoll": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        },
+        "bodyExcerptCharacters": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 2000
+        }
+      },
+      "required": [
+        "sourceId",
+        "url",
+        "accessMethod",
+        "cost",
+        "pollIntervalMs",
+        "requestTimeoutMs",
+        "freshnessSeconds",
+        "macroArmWindowSeconds",
+        "maxItemsPerPoll",
+        "bodyExcerptCharacters"
+      ],
+      "additionalProperties": false
+    },
+    "marketSource": {
+      "type": "object",
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "const": "binance-spot-public"
+        },
+        "websocketBaseUrl": {
+          "type": "string",
+          "const": "wss://stream.binance.com:9443/stream"
+        },
+        "assets": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "BTC"
+            },
+            {
+              "type": "string",
+              "const": "ETH"
+            },
+            {
+              "type": "string",
+              "const": "SOL"
+            },
+            {
+              "type": "string",
+              "const": "VIRTUAL"
+            }
+          ]
+        },
+        "symbols": {
+          "type": "object",
+          "properties": {
+            "BTC": {
+              "type": "string",
+              "const": "BTCUSDT"
+            },
+            "ETH": {
+              "type": "string",
+              "const": "ETHUSDT"
+            },
+            "SOL": {
+              "type": "string",
+              "const": "SOLUSDT"
+            },
+            "VIRTUAL": {
+              "type": "string",
+              "const": "VIRTUALUSDT"
+            }
+          },
+          "required": [
+            "BTC",
+            "ETH",
+            "SOL",
+            "VIRTUAL"
+          ],
+          "additionalProperties": false
+        },
+        "streams": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "aggTrade"
+            },
+            {
+              "type": "string",
+              "const": "bookTicker"
+            }
+          ]
+        },
+        "freshnessMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reconnectMinimumMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reconnectMaximumMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "rollingWindowSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "sourceId",
+        "websocketBaseUrl",
+        "assets",
+        "symbols",
+        "streams",
+        "freshnessMs",
+        "reconnectMinimumMs",
+        "reconnectMaximumMs",
+        "rollingWindowSeconds"
+      ],
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "sell": {
+          "type": "object",
+          "properties": {
+            "returnWindowSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "crossAssetReturnMaximum": {
+              "type": "object",
+              "properties": {
+                "BTC": {
+                  "type": "string",
+                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+                },
+                "ETH": {
+                  "type": "string",
+                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+                },
+                "SOL": {
+                  "type": "string",
+                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+                }
+              },
+              "required": [
+                "BTC",
+                "ETH",
+                "SOL"
+              ],
+              "additionalProperties": false
+            },
+            "crossAssetMinimumPassing": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 3
+            },
+            "virtualRelativeReturnMaximum": {
+              "type": "string",
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+            },
+            "virtualBuySellRatioMaximum": {
+              "type": "string",
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+            },
+            "sellPressurePersistenceSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "extremeMarketBreakdown": {
+              "type": "object",
+              "properties": {
+                "calibrationState": {
+                  "type": "string",
+                  "const": "NOT_CALIBRATED"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "calibrationState",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "returnWindowSeconds",
+            "crossAssetReturnMaximum",
+            "crossAssetMinimumPassing",
+            "virtualRelativeReturnMaximum",
+            "virtualBuySellRatioMaximum",
+            "sellPressurePersistenceSeconds",
+            "extremeMarketBreakdown"
+          ],
+          "additionalProperties": false
+        },
+        "rebuy": {
+          "type": "object",
+          "properties": {
+            "macroQuietSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "noNewLowSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "virtualRelativeReturnMinimum": {
+              "type": "string",
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+            },
+            "relativeRecoveryPersistenceSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "virtualBuySellRatioMinimum": {
+              "type": "string",
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+            },
+            "flowNormalizationPersistenceSeconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "macroQuietSeconds",
+            "noNewLowSeconds",
+            "virtualRelativeReturnMinimum",
+            "relativeRecoveryPersistenceSeconds",
+            "virtualBuySellRatioMinimum",
+            "flowNormalizationPersistenceSeconds"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "sell",
+        "rebuy"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "modelVersion",
+    "configVersion",
+    "effectiveAt",
+    "mode",
+    "economicEvidence",
+    "outputBasis",
+    "time",
+    "permissions",
+    "retention",
+    "newsSource",
+    "marketSource",
+    "model"
+  ],
+  "additionalProperties": false,
+  "$id": "https://virtual-risk.local/schema/system-config.v1.json"
+}

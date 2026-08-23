@@ -1,0 +1,247 @@
+{
+  "reportId": "v3-shadow-status",
+  "schemaVersion": "3.0.0",
+  "generatedAt": "2026-08-23T11:43:58.835Z",
+  "outputBasis": "CEX_REFERENCE",
+  "economicEvidence": "POSITIVE_EV_NOT_PROVEN",
+  "latestSession": {
+    "status": "IN_PROGRESS",
+    "startedAt": "2026-08-23T11:41:19.812Z",
+    "lastObservedAt": "2026-08-23T11:43:51.209Z",
+    "elapsedMs": 159023,
+    "requiredSoakMs": 3600000,
+    "soakProgress": 0.044173055555555556,
+    "elapsedRequirementMet": false,
+    "acceptanceStatus": "IN_PROGRESS",
+    "latestMetrics": {
+      "asOf": "2026-08-23T11:43:51.295Z",
+      "binance": {
+        "activeGaps": [],
+        "capturedAt": "2026-08-23T11:43:51.295Z",
+        "reconnects": 0,
+        "sourceId": "binance-spot-public",
+        "streams": {
+          "BTCUSDT:aggTrade": {
+            "accepted": 2327,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.325Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.074Z",
+            "latencyBasis": "EXCHANGE_EVENT_TIME",
+            "latencyMs": {
+              "max": 201,
+              "p50": 2,
+              "p95": 71,
+              "p99": 101
+            },
+            "latencySampleSize": 2327,
+            "messageRatePerSecond": 15.413658342717095,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 2327,
+            "sequenceCompleteness": 1
+          },
+          "BTCUSDT:bookTicker": {
+            "accepted": 31223,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.198Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.208Z",
+            "latencyBasis": "NOT_AVAILABLE",
+            "latencyMs": {
+              "max": null,
+              "p50": null,
+              "p95": null,
+              "p99": null
+            },
+            "latencySampleSize": 0,
+            "messageRatePerSecond": 206.64209084230657,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 31223,
+            "sequenceCompleteness": null
+          },
+          "ETHUSDT:aggTrade": {
+            "accepted": 1676,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.318Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.138Z",
+            "latencyBasis": "EXCHANGE_EVENT_TIME",
+            "latencyMs": {
+              "max": 107,
+              "p50": 3,
+              "p95": 71,
+              "p99": 98
+            },
+            "latencySampleSize": 1676,
+            "messageRatePerSecond": 11.101028633500468,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 1676,
+            "sequenceCompleteness": 1
+          },
+          "ETHUSDT:bookTicker": {
+            "accepted": 12623,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.320Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.186Z",
+            "latencyBasis": "NOT_AVAILABLE",
+            "latencyMs": {
+              "max": null,
+              "p50": null,
+              "p95": null,
+              "p99": null
+            },
+            "latencySampleSize": 0,
+            "messageRatePerSecond": 83.60986918363967,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 12623,
+            "sequenceCompleteness": null
+          },
+          "SOLUSDT:aggTrade": {
+            "accepted": 542,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.457Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.204Z",
+            "latencyBasis": "EXCHANGE_EVENT_TIME",
+            "latencyMs": {
+              "max": 124,
+              "p50": 4,
+              "p95": 98,
+              "p99": 99
+            },
+            "latencySampleSize": 542,
+            "messageRatePerSecond": 3.5932589930919265,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 542,
+            "sequenceCompleteness": 1
+          },
+          "SOLUSDT:bookTicker": {
+            "accepted": 5824,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.244Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.206Z",
+            "latencyBasis": "NOT_AVAILABLE",
+            "latencyMs": {
+              "max": null,
+              "p50": null,
+              "p95": null,
+              "p99": null
+            },
+            "latencySampleSize": 0,
+            "messageRatePerSecond": 38.55651402506439,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 5824,
+            "sequenceCompleteness": null
+          },
+          "VIRTUALUSDT:aggTrade": {
+            "accepted": 47,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:27.061Z",
+            "freshness": "STALE",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:44.980Z",
+            "latencyBasis": "EXCHANGE_EVENT_TIME",
+            "latencyMs": {
+              "max": 99,
+              "p50": 9,
+              "p95": 98,
+              "p99": 99
+            },
+            "latencySampleSize": 47,
+            "messageRatePerSecond": 0.3258593674168365,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 47,
+            "sequenceCompleteness": 1
+          },
+          "VIRTUALUSDT:bookTicker": {
+            "accepted": 535,
+            "duplicates": 0,
+            "firstReceivedAt": "2026-08-23T11:41:20.379Z",
+            "freshness": "FRESH",
+            "gapEvents": 0,
+            "lastReceivedAt": "2026-08-23T11:43:51.135Z",
+            "latencyBasis": "NOT_AVAILABLE",
+            "latencyMs": {
+              "max": null,
+              "p50": null,
+              "p95": null,
+              "p99": null
+            },
+            "latencySampleSize": 0,
+            "messageRatePerSecond": 3.545018420843383,
+            "missingAggregateIds": 0,
+            "outOfOrder": 0,
+            "received": 535,
+            "sequenceCompleteness": null
+          }
+        },
+        "totalGapEvents": 0
+      },
+      "elapsedMs": 151483,
+      "requiredSoakMs": 3600000,
+      "soakProgress": 0.04207861111111111,
+      "soakStatus": "IN_PROGRESS",
+      "startedAt": "2026-08-23T11:41:19.812Z",
+      "techflow": {
+        "attempts": 15,
+        "bootstrapItems": 0,
+        "capturedAt": "2026-08-23T11:43:51.295Z",
+        "dataAgeMs": 5674,
+        "duplicateRate": 1,
+        "duplicates": 135,
+        "errorsByCode": {},
+        "firstAttemptAt": "2026-08-23T11:41:19.870Z",
+        "gaps": 0,
+        "lastAttemptAt": "2026-08-23T11:43:45.621Z",
+        "liveItemLatencySampleSize": 0,
+        "liveItemSourceToReceiveLatencyMs": {
+          "max": null,
+          "p50": null,
+          "p95": null,
+          "p99": null
+        },
+        "messagesSeen": 135,
+        "notModified": 0,
+        "sourceId": "techflow-public-newsletter",
+        "successes": 15,
+        "successRate": 1,
+        "uniqueItems": 0
+      }
+    }
+  },
+  "shadowValidation": {
+    "requiredObservedMs": 1209600000,
+    "contiguousObservedMs": 151156,
+    "progress": 0.00012496362433862433,
+    "elapsedRequirementMet": false,
+    "cexReferenceSellSignals": 0,
+    "riskWindowRequirement": "REVIEW_REQUIRED",
+    "conclusion": "IN_PROGRESS"
+  },
+  "integrity": {
+    "parsedRecords": 39,
+    "latestSequence": 39,
+    "payloadHashesVerified": true,
+    "maximumAcceptedSampleGapMs": 30000
+  },
+  "limitations": [
+    "Elapsed time never auto-passes source quality or economic evidence",
+    "No wallet, RPC, DEX quote, signing, broadcast, or execution receipt is present",
+    "Computer sleep, process downtime, or sample gaps above 30 seconds do not count toward observed Shadow time"
+  ]
+}

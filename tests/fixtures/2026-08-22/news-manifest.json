@@ -1,0 +1,33 @@
+{
+  "fixtureId": "virtual-risk-news-2026-08-22-v1",
+  "evidenceLevel": "HISTORICAL_REFERENCE",
+  "accessedAt": "2026-08-22T08:59:06.000Z",
+  "assumptions": {
+    "AP": "Source time is 03:40:55Z; replay received time is conservatively pinned to 03:43:45Z.",
+    "otherSources": "Received time equals recorded source time because no earlier local receipt exists.",
+    "rawBodies": "Not redistributed; hashes cover the stored short headline only and URLs preserve provenance.",
+    "factVsCause": "The tariff fact is corroborated. Whether it caused the crypto selloff remains NOT_PROVEN."
+  },
+  "expectedClusters": [
+    {
+      "clusterId": "cluster-canada-us-tariffs-20260822",
+      "claimFingerprint": "canada-us-trade-talks-paused-50pct-reciprocal-tariffs",
+      "observationIds": [
+        "news-ap-canada-tariffs-20260822",
+        "news-jin10-canada-tariffs-20260822",
+        "news-carney-x-canada-tariffs-20260822",
+        "news-watcher-guru-canada-tariffs-20260822",
+        "news-techflow-canada-tariffs-20260822",
+        "news-axios-canada-tariffs-20260822",
+        "news-unusual-whales-canada-tariffs-20260822"
+      ],
+      "duplicateAttentionDoesNotIncreaseFactConfidence": true
+    },
+    {
+      "clusterId": "cluster-iran-military-20260822",
+      "claimFingerprint": "iran-military-geopolitical-risk-statement",
+      "observationIds": ["news-jin10-iran-military-20260822"],
+      "independentFromInitialTariffCluster": true
+    }
+  ]
+}

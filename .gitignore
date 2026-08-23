@@ -1,0 +1,27 @@
+node_modules/
+dist/
+coverage/
+.vite/
+.playwright-cli/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.DS_Store
+
+# Runtime data is evidence, not source code. Keep it outside Git by default.
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.parquet
+
+# Secrets must stay outside the repository. There is intentionally no tracked .env example.
+.env
+.env.*
+*.pem
+*.key
+*.keystore

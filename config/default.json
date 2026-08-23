@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.1.0",
+  "modelVersion": "0.3.0",
+  "configVersion": "0.3.1",
+  "effectiveAt": "2026-08-23T11:39:00.000Z",
+  "mode": "SHADOW",
+  "economicEvidence": "POSITIVE_EV_NOT_PROVEN",
+  "outputBasis": "CEX_REFERENCE",
+  "time": {
+    "internalTimezone": "UTC",
+    "uiTimezone": "Asia/Shanghai",
+    "maximumClockDriftMs": 1000
+  },
+  "permissions": {
+    "readOnly": true,
+    "signing": "UNSUPPORTED",
+    "broadcast": "UNSUPPORTED",
+    "walletRead": "UNSUPPORTED",
+    "rpc": "UNSUPPORTED",
+    "dexQuote": "UNSUPPORTED"
+  },
+  "retention": {
+    "rawDays": 180,
+    "cursorPath": "data/runtime/techflow-cursor.json",
+    "journalPath": "data/runtime/v3-shadow-v0.3.1.jsonl"
+  },
+  "newsSource": {
+    "sourceId": "techflow-public-newsletter",
+    "url": "https://www.techflowpost.com/newsletter",
+    "accessMethod": "PUBLIC_WEBPAGE",
+    "cost": "FREE",
+    "pollIntervalMs": 10000,
+    "requestTimeoutMs": 8000,
+    "freshnessSeconds": 180,
+    "macroArmWindowSeconds": 7200,
+    "maxItemsPerPoll": 50,
+    "bodyExcerptCharacters": 600
+  },
+  "marketSource": {
+    "sourceId": "binance-spot-public",
+    "websocketBaseUrl": "wss://stream.binance.com:9443/stream",
+    "assets": ["BTC", "ETH", "SOL", "VIRTUAL"],
+    "symbols": {
+      "BTC": "BTCUSDT",
+      "ETH": "ETHUSDT",
+      "SOL": "SOLUSDT",
+      "VIRTUAL": "VIRTUALUSDT"
+    },
+    "streams": ["aggTrade", "bookTicker"],
+    "freshnessMs": 5000,
+    "reconnectMinimumMs": 1000,
+    "reconnectMaximumMs": 30000,
+    "rollingWindowSeconds": 600
+  },
+  "model": {
+    "sell": {
+      "returnWindowSeconds": 60,
+      "crossAssetReturnMaximum": {
+        "BTC": "-0.001",
+        "ETH": "-0.0015",
+        "SOL": "-0.005"
+      },
+      "crossAssetMinimumPassing": 2,
+      "virtualRelativeReturnMaximum": "-0.0025",
+      "virtualBuySellRatioMaximum": "0.6",
+      "sellPressurePersistenceSeconds": 3,
+      "extremeMarketBreakdown": {
+        "calibrationState": "NOT_CALIBRATED",
+        "reason": "Historical replay and held-out calibration have not frozen an extreme-market threshold"
+      }
+    },
+    "rebuy": {
+      "macroQuietSeconds": 900,
+      "noNewLowSeconds": 300,
+      "virtualRelativeReturnMinimum": "0",
+      "relativeRecoveryPersistenceSeconds": 30,
+      "virtualBuySellRatioMinimum": "1.1",
+      "flowNormalizationPersistenceSeconds": 30
+    }
+  }
+}

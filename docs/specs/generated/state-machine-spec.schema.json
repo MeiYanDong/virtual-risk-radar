@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "modelVersion": {
+      "type": "string",
+      "const": "0.3.0"
+    },
+    "outputBasis": {
+      "type": "string",
+      "const": "CEX_REFERENCE"
+    },
+    "sell": {
+      "type": "object",
+      "properties": {
+        "initial": {
+          "type": "string",
+          "const": "NO_ACTION"
+        },
+        "states": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "NO_ACTION"
+            },
+            {
+              "type": "string",
+              "const": "NEWS_ARMED"
+            },
+            {
+              "type": "string",
+              "const": "MARKET_ARMED"
+            },
+            {
+              "type": "string",
+              "const": "SELL_READY"
+            },
+            {
+              "type": "string",
+              "const": "DATA_UNAVAILABLE"
+            },
+            {
+              "type": "string",
+              "const": "UNKNOWN"
+            }
+          ]
+        },
+        "conditionIds": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "S1-MACRO-SHOCK"
+            },
+            {
+              "type": "string",
+              "const": "S2-CROSS-ASSET-DRAWDOWN"
+            },
+            {
+              "type": "string",
+              "const": "S3-VIRTUAL-RELATIVE-WEAKNESS"
+            },
+            {
+              "type": "string",
+              "const": "S4-VIRTUAL-SELL-PRESSURE"
+            }
+          ]
+        },
+        "requiredConditionDenominator": {
+          "type": "number",
+          "const": 4
+        },
+        "confirmationRule": {
+          "type": "string",
+          "const": "ALL_FOUR_PASS"
+        },
+        "extremeMarketFallback": {
+          "type": "string",
+          "const": "NOT_CALIBRATED"
+        },
+        "transitions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "NO_ACTION",
+                      "NEWS_ARMED",
+                      "MARKET_ARMED",
+                      "SELL_READY",
+                      "REBUY_WAIT",
+                      "REBUY_READY",
+                      "DATA_UNAVAILABLE",
+                      "UNKNOWN"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "const": "*"
+                  }
+                ]
+              },
+              "to": {
+                "type": "string",
+                "enum": [
+                  "NO_ACTION",
+                  "NEWS_ARMED",
+                  "MARKET_ARMED",
+                  "SELL_READY",
+                  "REBUY_WAIT",
+                  "REBUY_READY",
+                  "DATA_UNAVAILABLE",
+                  "UNKNOWN"
+                ]
+              },
+              "guard": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "guard"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "initial",
+        "states",
+        "conditionIds",
+        "requiredConditionDenominator",
+        "confirmationRule",
+        "extremeMarketFallback",
+        "transitions"
+      ],
+      "additionalProperties": false
+    },
+    "rebuy": {
+      "type": "object",
+      "properties": {
+        "initial": {
+          "type": "string",
+          "const": "NO_ACTION"
+        },
+        "states": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "NO_ACTION"
+            },
+            {
+              "type": "string",
+              "const": "REBUY_WAIT"
+            },
+            {
+              "type": "string",
+              "const": "REBUY_READY"
+            },
+            {
+              "type": "string",
+              "const": "DATA_UNAVAILABLE"
+            },
+            {
+              "type": "string",
+              "const": "UNKNOWN"
+            }
+          ]
+        },
+        "conditionIds": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "B1-NO-NEW-MACRO-ESCALATION"
+            },
+            {
+              "type": "string",
+              "const": "B2-CROSS-ASSET-NO-NEW-LOW"
+            },
+            {
+              "type": "string",
+              "const": "B3-VIRTUAL-RELATIVE-RECOVERY"
+            },
+            {
+              "type": "string",
+              "const": "B4-SELL-PRESSURE-NORMALIZED"
+            }
+          ]
+        },
+        "requiredConditionDenominator": {
+          "type": "number",
+          "const": 4
+        },
+        "confirmationRule": {
+          "type": "string",
+          "const": "ALL_FOUR_PASS_AND_SELL_CONTEXT"
+        },
+        "transitions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "NO_ACTION",
+                      "NEWS_ARMED",
+                      "MARKET_ARMED",
+                      "SELL_READY",
+                      "REBUY_WAIT",
+                      "REBUY_READY",
+                      "DATA_UNAVAILABLE",
+                      "UNKNOWN"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "const": "*"
+                  }
+                ]
+              },
+              "to": {
+                "type": "string",
+                "enum": [
+                  "NO_ACTION",
+                  "NEWS_ARMED",
+                  "MARKET_ARMED",
+                  "SELL_READY",
+                  "REBUY_WAIT",
+                  "REBUY_READY",
+                  "DATA_UNAVAILABLE",
+                  "UNKNOWN"
+                ]
+              },
+              "guard": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "guard"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "initial",
+        "states",
+        "conditionIds",
+        "requiredConditionDenominator",
+        "confirmationRule",
+        "transitions"
+      ],
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "maximumOutput": {
+          "type": "string",
+          "const": "SHADOW_CANDIDATE"
+        },
+        "signing": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "broadcast": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "walletRead": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "rpc": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        },
+        "dexQuote": {
+          "type": "string",
+          "const": "UNSUPPORTED"
+        }
+      },
+      "required": [
+        "maximumOutput",
+        "signing",
+        "broadcast",
+        "walletRead",
+        "rpc",
+        "dexQuote"
+      ],
+      "additionalProperties": false
+    },
+    "noActionIsFormalOutput": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "modelVersion",
+    "outputBasis",
+    "sell",
+    "rebuy",
+    "execution",
+    "noActionIsFormalOutput"
+  ],
+  "additionalProperties": false,
+  "$id": "https://virtual-risk.local/schema/state-machine-spec.v1.json"
+}

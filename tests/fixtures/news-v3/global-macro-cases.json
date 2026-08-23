@@ -1,0 +1,112 @@
+[
+  {
+    "id": 2001,
+    "region": "AMERICAS",
+    "title": "加拿大与美国贸易谈判暂停，双方拟加征 50% 关税并反制",
+    "abstract": "加拿大总理表示将对美国关税采取同等幅度反制。",
+    "expectedType": "TRADE_SANCTIONS",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "HIGH",
+    "expectedCountries": ["US", "CA"],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2002,
+    "region": "EUROPE",
+    "title": "欧洲央行紧急降息以支持经济复苏",
+    "abstract": "欧盟经济增长低于预期，欧洲央行宣布宽松政策。",
+    "expectedType": "MONETARY_MACRO",
+    "expectedDirection": "RISK_ON",
+    "expectedSeverity": "HIGH",
+    "expectedCountries": ["EU"],
+    "expectedMarketReaction": "UPTURN"
+  },
+  {
+    "id": 2003,
+    "region": "ASIA",
+    "title": "中国人民银行维持利率不变",
+    "abstract": "中国央行按计划公布政策决定，市场此前已有充分预期。",
+    "expectedType": "MONETARY_MACRO",
+    "expectedDirection": "UNKNOWN",
+    "expectedSeverity": "MEDIUM",
+    "expectedCountries": ["CN"],
+    "expectedMarketReaction": "NONE"
+  },
+  {
+    "id": 2004,
+    "region": "ASIA",
+    "title": "日本发生重大灾害，能源供应链中断",
+    "abstract": "日本部分港口和天然气运输暂停。",
+    "expectedType": "ENERGY_SUPPLY",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "HIGH",
+    "expectedCountries": ["JP"],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2005,
+    "region": "MIDDLE_EAST",
+    "title": "以色列与伊朗冲突升级为全面战争",
+    "abstract": "双方发生导弹空袭，地缘风险急剧恶化。",
+    "expectedType": "GEOPOLITICS",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "SYSTEMIC",
+    "expectedCountries": ["IL", "IR"],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2006,
+    "region": "GLOBAL",
+    "title": "全球银行体系出现系统性崩溃风险",
+    "abstract": "多家银行挤兑并暂停清算，流动性危机扩大。",
+    "expectedType": "FINANCIAL_STABILITY",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "SYSTEMIC",
+    "expectedCountries": [],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2007,
+    "region": "AMERICAS",
+    "title": "美国发布重大稳定币交易禁令",
+    "abstract": "FinCEN 宣布收紧稳定币二级市场政策。",
+    "expectedType": "CRYPTO_POLICY",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "HIGH",
+    "expectedCountries": ["US"],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2008,
+    "region": "GLOBAL",
+    "title": "OPEC 供应中断推高原油风险",
+    "abstract": "石油出口设施暂停，全球能源供应收紧。",
+    "expectedType": "ENERGY_SUPPLY",
+    "expectedDirection": "RISK_OFF",
+    "expectedSeverity": "MEDIUM",
+    "expectedCountries": [],
+    "expectedMarketReaction": "DOWNTURN"
+  },
+  {
+    "id": 2009,
+    "region": "AMERICAS",
+    "title": "美国将于周五公布通胀数据",
+    "abstract": "这是预定的宏观数据日程，目前没有新的政策变化。",
+    "expectedType": "MONETARY_MACRO",
+    "expectedDirection": "UNKNOWN",
+    "expectedSeverity": "MEDIUM",
+    "expectedCountries": ["US"],
+    "expectedMarketReaction": "NONE"
+  },
+  {
+    "id": 2010,
+    "region": "OTHER",
+    "title": "知名演员发布新电影预告",
+    "abstract": "该消息与金融市场和加密政策无关。",
+    "expectedType": "OTHER",
+    "expectedDirection": "UNKNOWN",
+    "expectedSeverity": "UNKNOWN",
+    "expectedCountries": [],
+    "expectedMarketReaction": "NONE"
+  }
+]

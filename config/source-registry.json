@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "reviewedAt": "2026-08-23T02:20:00.000Z",
+  "activeSources": [
+    {
+      "sourceId": "techflow-public-newsletter",
+      "category": "NEWS",
+      "kind": "PUBLIC_WEBPAGE",
+      "capabilityState": "TESTED",
+      "cost": "FREE",
+      "authentication": "NONE",
+      "url": "https://www.techflowpost.com/newsletter",
+      "officialApi": "NOT_VERIFIED",
+      "rss": "NOT_VERIFIED",
+      "availabilitySla": "NONE",
+      "redistributionLicense": "NOT_VERIFIED",
+      "scope": "LATEST_NEWSLETTER_ITEMS_ONLY",
+      "polling": "Conservative 10-second polling with ETag/Last-Modified when available",
+      "retention": "Internal decision fields and hashes only; no body redistribution endpoint",
+      "failureSemantics": "403/429/5xx/login wall/schema drift/time parse/empty list are visible source errors; no hidden fallback",
+      "writeCapability": "UNSUPPORTED"
+    },
+    {
+      "sourceId": "binance-spot-public",
+      "category": "MARKET",
+      "kind": "SPOT_WEBSOCKET",
+      "capabilityState": "TESTED",
+      "cost": "FREE",
+      "authentication": "NONE",
+      "url": "wss://stream.binance.com:9443/stream",
+      "documentationUrl": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "VIRTUALUSDT"],
+      "streams": ["aggTrade", "bookTicker"],
+      "takerSideMapping": "aggTrade.m=true => taker SELL; false => taker BUY",
+      "gapSemantics": "Duplicate and out-of-order messages are discarded; unresolved ID/time gaps are explicit and dependent conditions become UNKNOWN",
+      "retention": "Rolling runtime window plus append-only Shadow evidence",
+      "failureSemantics": "Disconnect/stale/symbol gap affects only dependent conditions; no second exchange or stale-data fallback",
+      "writeCapability": "UNSUPPORTED"
+    }
+  ],
+  "prohibitedRuntimeSources": [
+    "RPC",
+    "CHAIN_MONITORING",
+    "DEX_QUOTE",
+    "WALLET_READ",
+    "DERIVATIVES",
+    "SECOND_EXCHANGE",
+    "SECOND_NEWS_SOURCE",
+    "PAID_SOURCE"
+  ],
+  "upgradeRule": "Any additional source requires a separate product decision and measured incremental information value; none is an implicit fallback."
+}

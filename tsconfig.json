@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "useUnknownInCatchVariables": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@virtual/domain": ["packages/domain/src/index.ts"],
+      "@virtual/config": ["packages/config/src/index.ts"],
+      "@virtual/storage": ["packages/storage/src/index.ts"],
+      "@virtual/news": ["packages/news-adapters/src/index.ts"],
+      "@virtual/chain": ["packages/chain-adapters/src/index.ts"],
+      "@virtual/replay": ["packages/replay/src/index.ts"],
+      "@virtual/features": ["packages/feature-engine/src/index.ts"],
+      "@virtual/decision": ["packages/decision-core/src/index.ts"],
+      "@virtual/market": ["packages/market-adapters/src/index.ts"]
+    },
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": [
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "packages/**/*.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "coverage", ".venv"]
+}

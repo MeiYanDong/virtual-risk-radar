@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "3.0.0",
+  "modelVersion": "0.3.0",
+  "outputBasis": "CEX_REFERENCE",
+  "sell": {
+    "initial": "NO_ACTION",
+    "states": [
+      "NO_ACTION",
+      "NEWS_ARMED",
+      "MARKET_ARMED",
+      "SELL_READY",
+      "DATA_UNAVAILABLE",
+      "UNKNOWN"
+    ],
+    "conditionIds": [
+      "S1-MACRO-SHOCK",
+      "S2-CROSS-ASSET-DRAWDOWN",
+      "S3-VIRTUAL-RELATIVE-WEAKNESS",
+      "S4-VIRTUAL-SELL-PRESSURE"
+    ],
+    "requiredConditionDenominator": 4,
+    "confirmationRule": "ALL_FOUR_PASS",
+    "extremeMarketFallback": "NOT_CALIBRATED",
+    "transitions": [
+      { "from": "NO_ACTION", "to": "NEWS_ARMED", "guard": "macro_shock_passes" },
+      {
+        "from": "NO_ACTION",
+        "to": "MARKET_ARMED",
+        "guard": "three_market_conditions_pass_without_macro"
+      },
+      { "from": "NEWS_ARMED", "to": "SELL_READY", "guard": "all_four_conditions_pass" },
+      { "from": "MARKET_ARMED", "to": "SELL_READY", "guard": "all_four_conditions_pass" },
+      {
+        "from": "SELL_READY",
+        "to": "NO_ACTION",
+        "guard": "any_required_condition_no_longer_passes"
+      },
+      {
+        "from": "*",
+        "to": "DATA_UNAVAILABLE",
+        "guard": "required_source_or_window_unknown_or_stale"
+      },
+      {
+        "from": "DATA_UNAVAILABLE",
+        "to": "NO_ACTION",
+        "guard": "sources_recover_without_armed_context"
+      },
+      {
+        "from": "DATA_UNAVAILABLE",
+        "to": "NEWS_ARMED",
+        "guard": "sources_recover_with_macro_shock"
+      },
+      {
+        "from": "DATA_UNAVAILABLE",
+        "to": "MARKET_ARMED",
+        "guard": "sources_recover_with_market_stress"
+      }
+    ]
+  },
+  "rebuy": {
+    "initial": "NO_ACTION",
+    "states": ["NO_ACTION", "REBUY_WAIT", "REBUY_READY", "DATA_UNAVAILABLE", "UNKNOWN"],
+    "conditionIds": [
+      "B1-NO-NEW-MACRO-ESCALATION",
+      "B2-CROSS-ASSET-NO-NEW-LOW",
+      "B3-VIRTUAL-RELATIVE-RECOVERY",
+      "B4-SELL-PRESSURE-NORMALIZED"
+    ],
+    "requiredConditionDenominator": 4,
+    "confirmationRule": "ALL_FOUR_PASS_AND_SELL_CONTEXT",
+    "transitions": [
+      {
+        "from": "NO_ACTION",
+        "to": "REBUY_WAIT",
+        "guard": "recovery_progress_or_sell_context_exists"
+      },
+      {
+        "from": "REBUY_WAIT",
+        "to": "REBUY_READY",
+        "guard": "all_four_conditions_pass_and_sell_context_exists"
+      },
+      {
+        "from": "REBUY_READY",
+        "to": "REBUY_WAIT",
+        "guard": "macro_escalation_new_low_or_sell_pressure_returns"
+      },
+      {
+        "from": "*",
+        "to": "DATA_UNAVAILABLE",
+        "guard": "required_source_or_window_unknown_or_stale"
+      },
+      {
+        "from": "DATA_UNAVAILABLE",
+        "to": "REBUY_WAIT",
+        "guard": "sources_recover_with_sell_context_or_recovery_progress"
+      },
+      {
+        "from": "DATA_UNAVAILABLE",
+        "to": "NO_ACTION",
+        "guard": "sources_recover_without_sell_context_or_progress"
+      }
+    ]
+  },
+  "execution": {
+    "maximumOutput": "SHADOW_CANDIDATE",
+    "signing": "UNSUPPORTED",
+    "broadcast": "UNSUPPORTED",
+    "walletRead": "UNSUPPORTED",
+    "rpc": "UNSUPPORTED",
+    "dexQuote": "UNSUPPORTED"
+  },
+  "noActionIsFormalOutput": true
+}

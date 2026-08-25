@@ -6,6 +6,7 @@
 > 当前工程状态：v0.2 本地只读垂直切片与 Base quote 研究证据保留，但已退出活跃产品；v0.3 仅实施 TechFlow 免费快讯 + Binance Spot + Sell/Rebuy 进度驾驶舱  
 > 当前经济证据：`POSITIVE_EV_NOT_PROVEN`  
 > 当前权限边界：`REPLAY + SHADOW + LIVE_READ_ONLY`；禁止签名、授权与广播。
+> 当前云端状态：`CLOUD_RUNTIME_VERIFIED_CURRENT`；<http://47.251.165.112/> 已运行，手工校验和发布已验证；TLS、异机备份、外部告警和自动 CD 尚未完成。
 
 > v0.2 历史收据：`pnpm run ci` 本地通过（140 TypeScript + 8 Python tests）；旧口径为 382/824，现已因范围重置而失效，不能继续作为 v0.3 进度。Base quote soak 等结果只作为历史研究证据。GitHub Actions `NOT_RUN`，CD `NOT_CONFIGURED`，Shadow `0/14 days`，历史事件 `1/30`。证据索引见 `docs/evidence/implementation-log.md`。
 
@@ -173,7 +174,7 @@ v0.3 固定边界：
 
 完成门槛：上述业务测试、`pnpm run ci`、桌面/手机视觉 QA 和当前进程 API readback 全部通过；逐项完成后才能勾选。
 
-完成证据：`docs/evidence/implementation-log.md` Batch 9；本地 `pnpm run ci` 通过（31 files / 230 tests，Python 8 tests），桌面与 390×844 浏览器复核通过，当前进程 `/api/news/audit` 与 17 个只读 OpenAPI 路径完成读回。当前变更尚未提交或推送，远端 CI 不计为本批次证据。
+完成证据：`docs/evidence/implementation-log.md` Batch 9 与 `docs/evidence/2026-08-25-swas-deployment.md`；当前本地 `pnpm run ci` 通过（32 files / 235 tests，Python 8 tests），GitHub Actions run 32801242516 通过；公网 `/api/news/audit`、`/news` 和 17 个只读 OpenAPI 路径完成读回。
 
 ### G. 历史验证与 Shadow
 
@@ -193,11 +194,13 @@ v0.3 固定边界：
 - [x] **V3-H004** 更新单元、集成、回放和 E2E 测试；删除已失效断言，不降低关键路径断言质量。
 - [x] **V3-H005** `lint/format/typecheck/unit/integration/e2e/build/secret-scan` 全部通过并留下命令与结果。
 - [x] **V3-H006** 更新 README、运行手册、已知限制和变更记录，明确 TechFlow 无 SLA、页面入口可能变化。
-- [x] **V3-H007** 本地运行 readback 证明仅两条外部输入处于 active；公开 GitHub Actions 已运行并通过，CD 继续准确报告 `NOT_CONFIGURED`。
+- [x] **V3-H007** 本地与云端 readback 证明仅两条外部输入处于 active；公开 GitHub Actions 已运行并通过；自动 CD 继续准确报告 `NOT_CONFIGURED`。
 - [x] **V3-H008** v0.3 连续 Shadow 稳定后，再单独评审是否删除 v0.2 RPC/DEX 代码；未评审前不做不可逆删除。`CONTROL_ACTIVE`：尚未达到稳定门槛，本轮未删除 v0.2 代码。
 - [x] **V3-H009** 创建公开仓库 `MeiYanDong/virtual-risk-radar`，默认分支与本地 upstream 均为 `main`；公开可见性、远端 commit 和首次 Actions run 已回读验证。
+- [x] **V3-H010** 将 clean、远端 CI 通过的 release 部署到项目独占 SWAS；完成制品 hash、原子回滚、systemd/Nginx、公网双源、持久化重启与真实浏览器 readback。
+- [ ] **V3-H011** 配置域名/TLS、异机备份、外部告警和自动 CD；未完成前必须在页面与文档中保留 HTTP/单机/人工发布边界。
 
-完成证据：`apps/server/src/index.ts`、`apps/server/src/v3-runtime.ts`、`apps/server/src/app.ts`、`config/default.json`、`config/source-registry.json`、`docs/evidence/implementation-log.md` Batch 6/8；`pnpm run ci` 本地与 GitHub Actions 均通过，CD 仍为 `NOT_CONFIGURED`。
+完成证据：`apps/server/src/index.ts`、`apps/server/src/v3-runtime.ts`、`apps/server/src/app.ts`、`config/default.json`、`config/source-registry.json`、`docs/evidence/implementation-log.md` Batch 6/8 与 `docs/evidence/2026-08-25-swas-deployment.md`；`pnpm run ci` 本地与 GitHub Actions 均通过，自动 CD 仍为 `NOT_CONFIGURED`。
 
 ### v0.3 阶段门槛
 
@@ -1207,24 +1210,24 @@ Phase 0 需求冻结与工程契约
 
 ### 10.1 Shadow 前部署决策
 
-- [x] **P10-000** 购买本项目独占的美国西海岸 SWAS；控制面确认 `Running`，应用保持 `NOT_DEPLOYED`。证据：`docs/evidence/2026-08-25-swas-purchase.md`。
+- [x] **P10-000** 购买本项目独占的美国西海岸 SWAS；控制面确认 `Running`。购买与后续部署证据分别见 `docs/evidence/2026-08-25-swas-purchase.md`、`docs/evidence/2026-08-25-swas-deployment.md`。
 - [x] **P10-001** 评审本地、全云或混合部署，选择独立全云端 24/7，避免与 LetsCash 等项目共用故障域；购买不计入 14 天连续 Shadow。
 - [ ] **P10-002** 若继续本地运行，关闭睡眠或明确非 24/7 窗口，并在报告中标记覆盖限制。
-- [ ] **P10-003** 若使用云端，完成最小权限、网络、凭证、日志和备份安全评审。
-- [ ] **P10-004** 配置仓库外秘密存储和轮换流程。
-- [ ] **P10-005** 记录运行版本、配置 hash、数据源 capability 和启动时间。
+- [ ] **P10-003 [PARTIAL]** 云端最小权限、网络、凭证和日志评审已完成；异机备份与恢复点未配置，因此整项保持未完成。
+- [x] **P10-004** 当前应用无 source/wallet secret；部署 SSH identity 以 `0600` 保存在仓库外，并在 runbook 定义双 key 重叠验证后撤旧 key 的轮换流程。
+- [x] **P10-005** 已记录 release、制品/配置 hash、两源 capability、systemd 启动时间和公网 readback；证据见 SWAS 部署回执。
 
 ### 10.2 运行管理与恢复
 
-- [ ] **P10-020** 实现服务 supervisor 与崩溃自动重启。
+- [x] **P10-020** 使用 hardened systemd supervisor、`Restart=on-failure` 与 5 秒退避；首轮失败真实触发 3 次自动重启，最终 release 当前 `active/running`。
 - [ ] **P10-021** 启动时恢复 source offsets、未完成数据 gap、状态机上下文和最近快照。
-- [ ] **P10-022** 重启后在窗口 warm-up 完成前保持关键条件 `UNKNOWN`。
-- [ ] **P10-023** 实现磁盘空间、数据库、Parquet 写入、API 和 UI 健康检查。
+- [x] **P10-022** 重启 readback 证明 60 秒窗口未积满前跨资产与相对强弱条件保持等待/未知，不沿用旧市场值。
+- [ ] **P10-023 [PARTIAL]** API、静态 UI、进程和源健康已验证；磁盘空间与外部告警未实现，v0.3 不使用数据库/Parquet。
 - [ ] **P10-024** 实现数据源限流/断线/恢复告警。
 - [ ] **P10-025** 单一链故障只隔离该链 quote capability。
 - [ ] **P10-026** 新闻系统故障继续 market-only 路径。
 - [ ] **P10-027** 决策账本写入失败时停止产生新 Shadow candidates。
-- [ ] **P10-028** 建立恢复演练：进程在风险阶段、报价 pending 和 rebuy wait 时重启。
+- [ ] **P10-028 [PARTIAL]** 已在 `NEWS_ARMED` 风险观察阶段完成进程重启与新闻/日志连续性演练；v0.3 无 quote pending，rebuy wait 的独立上下文恢复仍未覆盖。
 
 ### 10.3 Shadow 头寸与反事实
 
@@ -1414,7 +1417,7 @@ Phase 0 需求冻结与工程契约
 - [ ] **INPUT-008 [BLOCKED: USER_INPUT]** 战术仓位占总 VIRTUAL 的比例。
 - [ ] **INPUT-009 [BLOCKED: USER_INPUT]** 通知渠道偏好。
 - [ ] **INPUT-010 [BLOCKED: USER_INPUT]** 已有付费新闻/行情订阅及合法接入方式。
-- [x] **INPUT-011 [DECIDED: FULL_CLOUD]** 用户确认使用新购的独立美国西海岸 SWAS 作为 24/7 云端目标；应用尚未部署。
+- [x] **INPUT-011 [DECIDED: FULL_CLOUD]** 用户确认使用新购的独立美国西海岸 SWAS；应用已部署并完成公网 runtime readback，TLS/备份/告警仍待配置。
 - [ ] **INPUT-012 [OPTIONAL]** 用户是否愿意在人工交易后提供 tx hash 做只读对账。
 
 输入缺失时的默认行为：
@@ -1437,7 +1440,7 @@ Phase 0 需求冻结与工程契约
 - [ ] **DOD-FUNC-02** 正常、边界、缺失、过期、冲突和极端测试存在并通过。
 - [x] **DOD-FUNC-03** 错误和降级行为有明确状态，不依赖日志猜测。
 - [x] **DOD-FUNC-04** 配置字段已证明进入真实调用点。
-- [ ] **DOD-FUNC-05** 文档、schema/API 和运行 readback 一致。
+- [x] **DOD-FUNC-05** 当前文档、生成 schema、只读 API 与云端运行 readback 一致；长期 soak 结论仍单独保持未完成。
 
 ### 14.2 数据完成
 
@@ -1465,10 +1468,10 @@ Phase 0 需求冻结与工程契约
 
 ### 14.5 发布完成
 
-- [ ] **DOD-REL-01** lint/typecheck/unit/integration/e2e/build 全部通过。
+- [x] **DOD-REL-01** lint/typecheck/unit/integration/build 由本地和 GitHub CI 通过；公网首页→新闻页真实 Chromium E2E 导航、渲染与控制台检查通过。
 - [x] **DOD-REL-02** 秘密扫描、依赖审计和禁用能力扫描通过。
 - [ ] **DOD-REL-03** 运行、恢复、备份和故障手册齐全。
-- [ ] **DOD-REL-04** 当前运行 readback 与声称能力一致。
+- [x] **DOD-REL-04** 云端 readback 证明外部输入恰好为 TechFlow + Binance，写入/RPC/DEX quote/钱包能力均为 `UNSUPPORTED`。
 - [x] **DOD-REL-05** 用户可见已知限制和证据等级准确。
 
 ---

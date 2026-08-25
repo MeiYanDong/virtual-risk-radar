@@ -16,8 +16,9 @@
 - 实现、命令、当前进程读回与未闭环边界：`docs/evidence/implementation-log.md` Batch 9。
 - 桌面视觉收据：`output/playwright/v3-news-audit-desktop.png`。
 - 390×844 手机收据：`output/playwright/v3-news-audit-mobile.png`、`output/playwright/v3-news-audit-mobile-expanded.png`。
-- 当前本地门禁为 `PASS_LOCAL`；新闻审计变更尚未 commit/push，因此旧 GitHub Actions run 不作为本批次远端证据。
+- 当前本地门禁和生产提交 GitHub Actions 均为 `PASS`；公网新闻页与 API 读回见部署回执。
 
 ## 当前云资源回执
 
-- [2026-08-25 阿里云 SWAS 购买回执](2026-08-25-swas-purchase.md)：独立美国西海岸实例已购买并由控制面验证；状态严格保持 `SERVER_PURCHASED / APPLICATION_NOT_DEPLOYED`。
+- [2026-08-25 阿里云 SWAS 购买回执](2026-08-25-swas-purchase.md)：独立美国西海岸实例的购买时点控制面证据。
+- [2026-08-25 阿里云 SWAS 部署回执](2026-08-25-swas-deployment.md)：当前 release、安全基线、公网双源、重启恢复和真实浏览器证据；状态 `CLOUD_RUNTIME_VERIFIED_CURRENT`。

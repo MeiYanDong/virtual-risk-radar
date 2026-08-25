@@ -170,3 +170,17 @@
 - 本地最终门禁：`pnpm run ci` PASS；Biome 126 files、`READ_ONLY_BOUNDARY_OK scanned=212`、TypeScript、30 schemas、10 fixtures、31 files / 230 tests、statements 89.98% / branches 81.43% / functions 92.13% / lines 93.15%、Python 8 tests、Node/Python 漏洞审计、许可证和 Vite production build 全部通过。
 - 历史完整性只从本功能启用后开始；停机期间未观察到或列表已移除的新闻不能回填成“已审计”。确定性规则仍需逐条人工比对和至少 30 个跨类型事件验证，经济结论保持 `POSITIVE_EV_NOT_PROVEN`。
 - 当前改动仍在本地工作树，尚未 commit/push；远端 Actions run 32646971643 只覆盖旧提交，本批次远端 CI 为 `NOT_RUN`。CD 仍为 `NOT_CONFIGURED`，没有部署后 readback。
+
+## 2026-08-25 / Batch 10 / 独立 SWAS 云端发布
+
+状态：`CLOUD_RUNTIME_VERIFIED_CURRENT / MANUAL_RELEASE_PASS`
+
+- 新购独占 SWAS `virtual-risk-radar-us-west`（`us-west-1`，`47.251.165.112`）完成 SSH key-only 管理、安全基线、Node 22.22.3、pnpm 11.19.0、Nginx 与 systemd 初始化；旧服务器未改动。
+- 新增 production artifact allowlist、dirty-tree gate、SHA-256 校验、原子 release、失败回滚、hardened systemd、Nginx GET-only proxy、host bootstrap 和部署资产测试。
+- 第一轮 release 因 `pnpm start` 尝试写只读目录被 `ProtectSystem=strict` 阻止；安装器按预期回滚。提交 `9830384` 改为 Node 直接加载 `tsx`，未放宽文件系统保护。
+- 美国节点对 `stream.binance.com` 返回 HTTP 451；同机对 Binance 官方 `data-stream.binance.vision` 完成 101 WebSocket 握手并收到成交。提交 `d372bd5` 统一更新配置、schema、测试和文档，保持 Binance Spot 单一市场源。
+- 生产 release 为 `d372bd51106177eccf94b6972e8b35c1f2fb9e0e`，artifact SHA-256 为 `bc23d163550abb7afac8dae4f902e27ccecc2bf0657504bc36966e1fbdbe2034`；GitHub Actions [32801242516](https://github.com/MeiYanDong/virtual-risk-radar/actions/runs/32801242516) 通过。
+- 公网 `/api/health` 读回 `externalInputCount=2`、TechFlow/Binance 均 `HEALTHY`，写入、RPC、DEX quote 与钱包读取全部 `UNSUPPORTED`；API 仅监听 loopback 8787，公网 POST 被拒绝。
+- Chromium 公网验收通过：首页显示中文实时结论、价格和 Sell/Rebuy 进度，`/news` 显示全部捕获新闻及过滤判断，最终控制台 0 error / 0 warning。
+- 在 `NEWS_ARMED` 阶段重启 systemd，5 秒内两源恢复；Shadow journal 79→85 行，新闻审计 12 行不变，新闻总数 11→11，证明追加与新闻恢复没有丢失/重复。完整市场窗口、gap 和状态机上下文跨进程恢复仍未实现。
+- 完整收据见 `docs/evidence/2026-08-25-swas-deployment.md`。域名/TLS、异机备份、外部告警和自动 CD 继续未闭环；60 分钟 soak、30 事件和 14 天 Shadow 不提前记为完成。

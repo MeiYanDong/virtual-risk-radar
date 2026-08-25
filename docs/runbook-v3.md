@@ -1,4 +1,4 @@
-# v0.3 本地运行与恢复手册
+# v0.3 运行、发布与恢复手册
 
 ## 启动与读回
 
@@ -16,6 +16,70 @@ curl --fail 'http://127.0.0.1:8787/api/news/audit?limit=10'
 健康 readback 必须显示 `externalInputCount=2`，来源只能是 `techflow-public-newsletter` 与 `binance-spot-public`。`rpc/dexQuote/walletRead/writeCapabilities` 必须为 `UNSUPPORTED`。
 
 正常停止使用 `Ctrl-C` 或向进程发送 `SIGTERM`。运行时先停止两个 adapter，再 fsync Shadow 日志。强制退出、电脑休眠或网络中断会形成观察空窗；不能把墙上时间全部计入 Shadow。
+
+## 云端生产运行
+
+当前生产入口：
+
+- <http://47.251.165.112/>
+- <http://47.251.165.112/news>
+- <http://47.251.165.112/api/health>
+
+管理 SSH identity 保存在仓库外 `${HOME}/.config/virtual-risk-radar/ssh/id_ed25519`，known-hosts 使用同目录专用文件。不得把私钥复制进仓库、release、服务器应用目录或 CI secret。当前应用本身不需要 API key、钱包或其他 secret。
+
+### 发布
+
+只从 clean commit 和通过 GitHub CI 的 SHA 发布：
+
+```sh
+pnpm run ci
+git status --short
+git rev-parse HEAD
+gh run list --workflow ci --branch main --limit 1
+
+pnpm deploy:artifact
+# 从 ARTIFACT_READY 输出复制 artifact path 与 sha256；不要猜测或复用旧值。
+
+bash scripts/deploy-swas-release.sh \
+  '<artifact.tar.gz>' \
+  '<artifact-sha256>' \
+  47.251.165.112 \
+  "${HOME}/.config/virtual-risk-radar/ssh/id_ed25519"
+```
+
+安装器再次校验 SHA-256 和 release commit，安装冻结生产依赖，以原子 symlink 切换 `/opt/virtual-risk-radar/current`；API 健康或 Nginx 校验失败时恢复上一个 release。systemd/Nginx/SSH 配置发生变化时，必须先按 hash 同步对应 `deploy/` 文件并执行 `systemctl daemon-reload`；release 制品本身不会偷偷改主机基线。
+
+### 部署后读回
+
+```sh
+curl --fail http://47.251.165.112/api/health
+curl --fail http://47.251.165.112/api/status
+curl --fail 'http://47.251.165.112/api/news/audit?limit=10'
+
+ssh -i "${HOME}/.config/virtual-risk-radar/ssh/id_ed25519" \
+  -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=yes \
+  -o "UserKnownHostsFile=${HOME}/.config/virtual-risk-radar/ssh/known_hosts" \
+  vrr-admin@47.251.165.112 \
+  'sudo systemctl status virtual-risk-radar nginx --no-pager'
+```
+
+必须同时确认：当前 release commit 正确；TechFlow/Binance 都为 `HEALTHY`；8787 只监听 loopback；公网首页与 `/news` 为 200；非 GET API 被拒绝；journal 继续追加；浏览器控制台无错误。`systemctl restart virtual-risk-radar` 后要再次验证新闻总数不减少、重复项不增加、两个来源重新变为健康。
+
+### SSH key 轮换
+
+1. 在仓库外生成 `.next` identity，权限设为 `0600`；旧 key 暂时保留。
+2. 使用当前 key 把新公钥加入 `vrr-admin` 的 `authorized_keys`，不要先删除旧 key。
+3. 用专用 known-hosts 和新 key 完成一次 `vrr-admin` 登录、`sudo -n true` 与部署 dry readback。
+4. 将发布命令切到新 identity，再从服务器移除旧公钥；分别复核新 key 可用、旧 key 已失效。
+5. 删除或归档旧私钥属于单独的凭据处置动作；保留轮换日期和新 fingerprint，不记录私钥内容。
+
+### 当前未完成的运维项
+
+- 没有域名/TLS；当前只能使用 HTTP。
+- 没有异机快照或对象存储备份，也没有完成恢复演练。配置备份前必须先确认成本、保留周期和加密方式。
+- 没有外部告警；进程、磁盘、TechFlow/Binance 故障目前依赖主动健康检查。
+- 发布为人工脚本，不是自动 CD。
 
 ## 持久化文件
 
@@ -47,6 +111,7 @@ TechFlow 没有已验证 SLA、API、RSS 或再分发许可。`/api/news/audit` 
 | 现象 | 系统行为 | 处理 |
 |---|---|---|
 | WebSocket 断开 | 指数退避 + jitter 重连 | 检查 reconnect 与 freshness；不启用第二交易所 |
+| `stream.binance.com` 返回 HTTP 451 | source `ERROR`，市场条件不可确认 | 美国节点使用 Binance 官方纯市场数据端点 `wss://data-stream.binance.vision/stream`；仍是同一个 Spot 源，不绕过身份/交易限制，也不接用户数据流 |
 | aggTrade ID gap | 受影响的 60 秒订单流为 `GAP/UNKNOWN` | 等 gap 离开滚动窗口；保留 gap 证据 |
 | 没有 VIRTUAL 成交 | `NO_TRADES/UNKNOWN` | 不把买卖量补 0，不确认 Sell/Rebuy 订单流条件 |
 | bookTicker/aggTrade 过期 | 依赖条件 `STALE` | 等待新消息，不沿用旧值 |

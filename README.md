@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/MeiYanDong/virtual-risk-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/MeiYanDong/virtual-risk-radar/actions/workflows/ci.yml)
 
-这是一个本地优先、只读、可回放的 VIRTUAL 风险监测系统。v0.3 只有两条外部输入：
+这是一个本地可回放、云端持续运行、全程只读的 VIRTUAL 风险监测系统。v0.3 只有两条外部输入：
 
 - TechFlow 免费公开 `7×24h 快讯`页面：提供全球宏观事件上下文；
 - Binance Spot：提供 BTC、ETH、SOL、VIRTUAL 的 `aggTrade` 与 `bookTicker`。
@@ -21,11 +21,17 @@
 - TechFlow 是公开网页入口，不是已验证的官方 API/RSS；没有 SLA，页面结构可能变化。
 - TechFlow 距最后一次成功语义解析超过 30 秒即显示延迟并使依赖条件降级；审计记录仅在本地私有保存 180 天。
 
-## 云端目标（尚未部署）
+## 云端运行
 
-2026-08-25 已为本项目购买独立的阿里云美国西海岸 SWAS：`virtual-risk-radar-us-west`，公网 IP `47.251.165.112`，Ubuntu 24.04，2 vCPU / 2 GiB / 40 GiB ESSD，费用 56 元、周期 1 个月且关闭自动续费。控制面已读回 `Running`，但应用、CD、域名、TLS、备份与部署后 runtime readback 均未配置；本地页面仍是当前运行入口。
+2026-08-25 已部署到本项目独占的阿里云美国西海岸 SWAS：`virtual-risk-radar-us-west`，公网 IP `47.251.165.112`。当前入口：
 
-购买与安全边界见 [2026-08-25 SWAS 购买回执](docs/evidence/2026-08-25-swas-purchase.md)。
+- 驾驶舱：<http://47.251.165.112/>
+- 逐条新闻审计：<http://47.251.165.112/news>
+- 只读健康检查：<http://47.251.165.112/api/health>
+
+生产 API 只监听 `127.0.0.1:8787`，由 Nginx 对外提供静态网页和只读 `GET /api/*`。服务使用独立无登录权限用户、systemd 自动重启、只读发布目录和仓库外 `0700/0600` 数据目录；SSH 已禁用 root、密码和键盘交互登录。当前为手工校验和发布，不是自动 CD。域名、TLS 和异机备份尚未配置，因此暂时只有 HTTP；不要在该站点提交任何敏感信息。
+
+购买与部署证据见 [SWAS 购买回执](docs/evidence/2026-08-25-swas-purchase.md)和 [SWAS 部署回执](docs/evidence/2026-08-25-swas-deployment.md)。
 
 v0.2 的 Base RPC/DEX quote、衍生品和多新闻源研究代码与收据暂时保留作历史证据，但不在 v0.3 composition root、默认配置、API 或 UI 中可达。相关命令统一使用 `legacy:v0.2:*` 前缀。
 
@@ -75,7 +81,7 @@ pnpm run ci
 
 `pnpm run ci` 执行格式、lint、只读/秘密边界扫描、严格类型、schema freshness、fixture 完整性、覆盖率测试、Python 检查、依赖审计、许可证检查和生产 Web 构建。
 
-GitHub Actions workflow 在 push 与 pull request 时运行；远端执行结果以仓库 Actions 页面为准。CD 与部署后 readback 仍为 `NOT_CONFIGURED/NOT_RUN`。
+GitHub Actions workflow 在 push 与 pull request 时运行；远端执行结果以仓库 Actions 页面为准。生产制品由已通过门禁的 clean commit 构建，执行 SHA-256 校验、原子切换、健康检查和失败回滚；发布仍由人工触发，自动 CD 为 `NOT_CONFIGURED`。当前部署后 API、双源、持久化重启和真实浏览器 readback 已运行并通过，详见部署回执。
 
 ## 关键文档
 

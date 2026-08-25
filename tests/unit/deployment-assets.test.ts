@@ -15,6 +15,8 @@ describe("production deployment assets", () => {
     expect(unit).toContain("ProtectSystem=strict");
     expect(unit).toContain("CapabilityBoundingSet=\n");
     expect(unit).toContain("ReadWritePaths=/var/lib/virtual-risk-radar");
+    expect(unit).toContain("ExecStart=/usr/local/bin/node --import tsx apps/server/src/index.ts");
+    expect(unit).not.toContain("ExecStart=/usr/local/bin/pnpm");
     expect(unit).not.toContain("ReadWritePaths=/opt/virtual-risk-radar");
   });
 

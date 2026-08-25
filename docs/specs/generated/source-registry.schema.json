@@ -149,7 +149,7 @@
             },
             "url": {
               "type": "string",
-              "const": "wss://stream.binance.com:9443/stream"
+              "const": "wss://data-stream.binance.vision/stream"
             },
             "documentationUrl": {
               "type": "string",

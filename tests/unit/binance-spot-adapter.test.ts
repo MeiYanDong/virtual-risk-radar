@@ -119,7 +119,7 @@ describe("Binance Spot deduplication, ordering, gaps, and freshness", () => {
   it("discards duplicates and out-of-order data while surfacing an unfilled aggTrade gap", () => {
     const processor = new BinanceSpotStreamProcessor({
       freshnessMs: 5_000,
-      endpoint: "wss://stream.binance.com:9443/stream",
+      endpoint: "wss://data-stream.binance.vision/stream",
     });
     expect(processor.ingest(aggTrade("VIRTUALUSDT", 10), NOW).state).toBe("ACCEPTED");
     expect(processor.ingest(aggTrade("VIRTUALUSDT", 10), NOW).state).toBe("DUPLICATE");
@@ -134,7 +134,7 @@ describe("Binance Spot deduplication, ordering, gaps, and freshness", () => {
   it("isolates one stale symbol instead of marking old values fresh", () => {
     const processor = new BinanceSpotStreamProcessor({
       freshnessMs: 5_000,
-      endpoint: "wss://stream.binance.com:9443/stream",
+      endpoint: "wss://data-stream.binance.vision/stream",
     });
     processor.markConnecting(NOW);
     processor.markConnected(NOW);
@@ -161,7 +161,7 @@ describe("Binance Spot deduplication, ordering, gaps, and freshness", () => {
     const processor = new BinanceSpotStreamProcessor({
       freshnessMs: 5_000,
       gapImpactMs: 60_000,
-      endpoint: "wss://stream.binance.com:9443/stream",
+      endpoint: "wss://data-stream.binance.vision/stream",
     });
     processor.markConnected(NOW);
     for (const symbol of SYMBOLS) {
@@ -263,7 +263,7 @@ describe("Binance Spot WebSocket lifecycle", () => {
     vi.useFakeTimers();
     const sockets: FakeSocket[] = [];
     const adapter = new BinanceSpotAdapter({
-      websocketBaseUrl: "wss://stream.binance.com:9443/stream",
+      websocketBaseUrl: "wss://data-stream.binance.vision/stream",
       freshnessMs: 5_000,
       reconnectMinimumMs: 1_000,
       reconnectMaximumMs: 30_000,
@@ -276,7 +276,7 @@ describe("Binance Spot WebSocket lifecycle", () => {
       },
     });
     expect(adapter.url()).toBe(
-      "wss://stream.binance.com:9443/stream?streams=btcusdt@aggTrade/btcusdt@bookTicker/ethusdt@aggTrade/ethusdt@bookTicker/solusdt@aggTrade/solusdt@bookTicker/virtualusdt@aggTrade/virtualusdt@bookTicker",
+      "wss://data-stream.binance.vision/stream?streams=btcusdt@aggTrade/btcusdt@bookTicker/ethusdt@aggTrade/ethusdt@bookTicker/solusdt@aggTrade/solusdt@bookTicker/virtualusdt@aggTrade/virtualusdt@bookTicker",
     );
     adapter.start();
     sockets[0]?.emit("open");
@@ -292,7 +292,7 @@ describe("Binance Spot WebSocket lifecycle", () => {
   it("fails visibly on malformed messages without accepting a tick", () => {
     const socket = new FakeSocket();
     const adapter = new BinanceSpotAdapter({
-      websocketBaseUrl: "wss://stream.binance.com:9443/stream",
+      websocketBaseUrl: "wss://data-stream.binance.vision/stream",
       freshnessMs: 5_000,
       reconnectMinimumMs: 1_000,
       reconnectMaximumMs: 30_000,

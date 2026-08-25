@@ -61,7 +61,7 @@ export const ActiveSystemConfigSchema = z
     marketSource: z
       .object({
         sourceId: z.literal("binance-spot-public"),
-        websocketBaseUrl: z.literal("wss://stream.binance.com:9443/stream"),
+        websocketBaseUrl: z.literal("wss://data-stream.binance.vision/stream"),
         assets: activeAssets,
         symbols: z
           .object({

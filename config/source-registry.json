@@ -27,7 +27,7 @@
       "capabilityState": "TESTED",
       "cost": "FREE",
       "authentication": "NONE",
-      "url": "wss://stream.binance.com:9443/stream",
+      "url": "wss://data-stream.binance.vision/stream",
       "documentationUrl": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~",
       "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "VIRTUALUSDT"],
       "streams": ["aggTrade", "bookTicker"],

@@ -33,7 +33,7 @@ const marketSourceSchema = z
     ...sharedSource,
     category: z.literal("MARKET"),
     kind: z.literal("SPOT_WEBSOCKET"),
-    url: z.literal("wss://stream.binance.com:9443/stream"),
+    url: z.literal("wss://data-stream.binance.vision/stream"),
     documentationUrl: z.url(),
     symbols: z.tuple([
       z.literal("BTCUSDT"),

@@ -22,7 +22,7 @@ HTTP 403/429/5xx、登录墙、空列表、时间失败与 schema 漂移都进�
 ## Binance Spot
 
 - Source ID：`binance-spot-public`
-- 入口：`wss://stream.binance.com:9443/stream`
+- 入口：`wss://data-stream.binance.vision/stream`（Binance 官方纯市场数据端点，不含用户数据流）
 - 资产：`BTCUSDT/ETHUSDT/SOLUSDT/VIRTUALUSDT`
 - 流：每个 symbol 的 `aggTrade` 与 `bookTicker`
 - 成本/认证：`FREE/NONE`

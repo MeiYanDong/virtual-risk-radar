@@ -38,7 +38,7 @@ function health(
     endpoint:
       source === "NEWS"
         ? "https://www.techflowpost.com/newsletter"
-        : "wss://stream.binance.com:9443/stream",
+        : "wss://data-stream.binance.vision/stream",
     lastAttemptAt: observedAt,
     lastSuccessAt: observedAt,
     dataAgeMs: 0,

@@ -39,7 +39,7 @@
   },
   "marketSource": {
     "sourceId": "binance-spot-public",
-    "websocketBaseUrl": "wss://stream.binance.com:9443/stream",
+    "websocketBaseUrl": "wss://data-stream.binance.vision/stream",
     "assets": ["BTC", "ETH", "SOL", "VIRTUAL"],
     "symbols": {
       "BTC": "BTCUSDT",

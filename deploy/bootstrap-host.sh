@@ -23,8 +23,9 @@ if ! sudo -u vrr-admin test -r /home/vrr-admin/.ssh/authorized_keys; then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get install -y ca-certificates curl nginx unattended-upgrades xz-utils
+apt-get -o DPkg::Lock::Timeout=180 update
+apt-get -o DPkg::Lock::Timeout=180 install -y \
+  ca-certificates curl nginx unattended-upgrades xz-utils
 
 case "$(uname -m)" in
   x86_64) node_arch="x64" ;;

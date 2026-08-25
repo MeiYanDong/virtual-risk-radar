@@ -55,5 +55,6 @@ describe("production deployment assets", () => {
     );
     expect(bootstrap).toContain("for executable in pnpm pnpx");
     expect(bootstrap).toMatch(/"\/usr\/local\/bin\/\$\{executable\}"/);
+    expect(bootstrap).toContain("DPkg::Lock::Timeout=180");
   });
 });

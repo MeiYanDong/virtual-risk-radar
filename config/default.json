@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1.0",
   "modelVersion": "0.3.0",
-  "configVersion": "0.3.1",
-  "effectiveAt": "2026-08-23T11:39:00.000Z",
+  "configVersion": "0.3.2",
+  "effectiveAt": "2026-08-23T15:22:00.000Z",
   "mode": "SHADOW",
   "economicEvidence": "POSITIVE_EV_NOT_PROVEN",
   "outputBasis": "CEX_REFERENCE",
@@ -21,8 +21,9 @@
   },
   "retention": {
     "rawDays": 180,
-    "cursorPath": "data/runtime/techflow-cursor.json",
-    "journalPath": "data/runtime/v3-shadow-v0.3.1.jsonl"
+    "cursorPath": "data/runtime/techflow-cursor-v0.3.2.json",
+    "journalPath": "data/runtime/v3-shadow-v0.3.2.jsonl",
+    "newsAuditPath": "data/runtime/v3-news-audit-v0.3.2.jsonl"
   },
   "newsSource": {
     "sourceId": "techflow-public-newsletter",
@@ -31,7 +32,7 @@
     "cost": "FREE",
     "pollIntervalMs": 10000,
     "requestTimeoutMs": 8000,
-    "freshnessSeconds": 180,
+    "freshnessSeconds": 30,
     "macroArmWindowSeconds": 7200,
     "maxItemsPerPoll": 50,
     "bodyExcerptCharacters": 600

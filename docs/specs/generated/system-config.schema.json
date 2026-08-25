@@ -112,12 +112,17 @@
         "journalPath": {
           "type": "string",
           "minLength": 1
+        },
+        "newsAuditPath": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
         "rawDays",
         "cursorPath",
-        "journalPath"
+        "journalPath",
+        "newsAuditPath"
       ],
       "additionalProperties": false
     },

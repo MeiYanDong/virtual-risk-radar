@@ -8,7 +8,7 @@ const isMainModule =
 if (isMainModule) {
   const config = await loadDefaultConfig();
   const runtime = new V3Runtime(config);
-  runtime.start();
+  await runtime.start();
   const server = await buildServer({ runtime });
   const { PORT: portInput } = process.env;
   const port = Number.parseInt(portInput ?? "8787", 10);

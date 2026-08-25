@@ -61,6 +61,7 @@ describe("v0.3 two-source read-only API", () => {
       "/api/status",
       "/api/sources",
       "/api/news/latest",
+      "/api/news/audit",
       "/api/market/current",
       "/api/decision/current",
       "/api/conditions/current?model=SELL",
@@ -154,6 +155,10 @@ describe("v0.3 two-source read-only API", () => {
     expect(document.openapi).toBe("3.1.0");
     expect(document.paths).not.toHaveProperty("/api/quotes/current");
     expect(document.paths).not.toHaveProperty("/api/wallets/read-only");
+    expect(document.paths["/api/news/audit"].get.parameters).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: "outcome", in: "query" })]),
+    );
+    expect(document.paths["/api/news/audit/{sourceItemId}"].get.responses).toHaveProperty("404");
     expect(
       Object.values(document.paths).every(
         (path: unknown) =>

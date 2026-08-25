@@ -14,9 +14,10 @@
 - SLA：`NONE`
 - 再分发许可：`NOT_VERIFIED`
 - 活跃范围：仅最新快讯列表及决策所需最小字段；不抓文章、研究、活动或 sitemap
-- 初始轮询：10 秒；服务端返回 ETag/Last-Modified 时使用条件请求
+- 初始轮询：10 秒；服务端返回 ETag/Last-Modified 时使用条件请求；距最后成功语义解析超过 30 秒即为 `STALE`
+- 本地审计：功能启用后实际观察到的独立列表项及 revision 保存 180 天；仅含规范化元数据、链接、判断和最多 600 字摘要
 
-HTTP 403/429/5xx、登录墙、空列表、时间失败与 schema 漂移都进入显式 source error。系统不会转用隐藏接口或其他新闻源，也不会把旧列表继续标成新鲜。正文不通过 API 再分发。
+HTTP 403/429/5xx、登录墙、空列表、时间失败与 schema 漂移都进入显式 source error。fetch 或 body 超过 8 秒会显式 timeout，后续轮询继续。系统不会转用隐藏接口或其他新闻源，也不会把旧列表继续标成新鲜。`/api/news/audit` 返回必要摘要与判断，但不保存或再分发完整正文；停机和 coverage gap 不会被伪装成完整历史。
 
 ## Binance Spot
 

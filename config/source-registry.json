@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.0.0",
-  "reviewedAt": "2026-08-23T02:20:00.000Z",
+  "reviewedAt": "2026-08-23T15:22:00.000Z",
   "activeSources": [
     {
       "sourceId": "techflow-public-newsletter",
@@ -16,8 +16,8 @@
       "redistributionLicense": "NOT_VERIFIED",
       "scope": "LATEST_NEWSLETTER_ITEMS_ONLY",
       "polling": "Conservative 10-second polling with ETag/Last-Modified when available",
-      "retention": "Internal decision fields and hashes only; no body redistribution endpoint",
-      "failureSemantics": "403/429/5xx/login wall/schema drift/time parse/empty list are visible source errors; no hidden fallback",
+      "retention": "Local private 180-day audit of normalized metadata, links, up to 600 excerpt characters, immutable judgments, and revisions; no complete-body redistribution",
+      "failureSemantics": "403/429/5xx/login wall/schema drift/time parse/empty list are visible source errors; more than 30 seconds since the last successful semantic parse becomes STALE; no hidden fallback",
       "writeCapability": "UNSUPPORTED"
     },
     {

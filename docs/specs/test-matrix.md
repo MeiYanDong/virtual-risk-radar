@@ -28,6 +28,12 @@
 | TM-MOD-019 | 极端离群值 | Decimal 公式可定义，不溢出/静默转 float | TESTED |
 | TM-MOD-020 | 阈值边界 | 刚低于/等于/刚高于按 operator 一致 | PARTIAL |
 | TM-MOD-021 | 系统时钟漂移 | data health BLOCKED，不输出 actionable | TESTED |
+| TM-NEWS-AUDIT-001 | 普通新闻被过滤 | 仍写入审计并显示“未进入风险观察”及具体理由 | TESTED |
+| TM-NEWS-AUDIT-002 | 相关但方向/影响不明 | 显示“需要人工复核”，不得强行归入负面或普通新闻 | TESTED |
+| TM-NEWS-AUDIT-003 | 四项新闻 gate 全通过 | 仅进入风险观察，仍不能单独产生减仓 | TESTED |
+| TM-NEWS-AUDIT-004 | 重复、内容 revision、重启 | 重复不增行，revision 不覆盖，180 天内重启可查 | TESTED |
+| TM-NEWS-AUDIT-005 | 30 秒无成功解析或 fetch 悬挂 | source 失效并阻断依赖条件，显式截止后继续轮询 | TESTED |
+| TM-NEWS-AUDIT-006 | 客户端审计页 | 桌面/390×844、键盘、筛选/搜索/详情/外链可用且不显示原生字段 | TESTED |
 
 ## 统一阈值边界模板
 

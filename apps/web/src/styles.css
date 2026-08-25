@@ -366,6 +366,22 @@ p {
   font-size: 0.8rem;
 }
 
+.macro-card__audit-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 18px;
+  color: var(--acid);
+  font: 700 0.7rem var(--mono);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.macro-card__audit-link:hover,
+.macro-card__audit-link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
 .macro-card__meta {
   display: flex;
   flex-wrap: wrap;

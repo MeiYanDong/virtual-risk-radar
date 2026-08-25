@@ -9,7 +9,7 @@ import {
   type RawTechFlowItem,
 } from "@virtual/news";
 import { timestamp } from "@virtual/domain";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 const NOW = timestamp("2026-08-23T10:15:18.000Z");
 const LIST_FIXTURE = readFileSync(
@@ -54,14 +54,16 @@ function page(items: RawTechFlowItem[]): string {
 function adapter(input: {
   responses: Response[];
   store?: MemoryTechFlowCursorStore;
-  now?: string;
+  now?: string | (() => Date);
 }) {
+  const now = input.now;
   const requests: (RequestInfo | URL)[] = [];
   const headers: Headers[] = [];
   let index = 0;
   const instance = new TechFlowPublicAdapter({
     pollIntervalMs: 10_000,
     requestTimeoutMs: 1_000,
+    freshnessMs: 30_000,
     maxItemsPerPoll: 50,
     bodyExcerptCharacters: 600,
     cursorStore: input.store ?? new MemoryTechFlowCursorStore(),
@@ -73,7 +75,7 @@ function adapter(input: {
       if (response === undefined) throw new Error("missing mocked response");
       return response;
     },
-    now: () => new Date(input.now ?? NOW),
+    now: typeof now === "function" ? now : () => new Date(now ?? NOW),
   });
   return { instance, requests, headers };
 }
@@ -273,5 +275,81 @@ describe("TechFlow conservative polling and cursor semantics", () => {
     expect((await instance.pollOnce()).items).toHaveLength(1);
     await expect(instance.pollOnce()).rejects.toThrow("TECHFLOW_SCHEMA_DRIFT_OR_EMPTY_LIST");
     expect(instance.health().status).toBe("ERROR");
+  });
+
+  it("marks a once-healthy source stale after 30 seconds and recovers on the next semantic parse", async () => {
+    let now = new Date("2026-08-23T10:00:00.000Z");
+    const { instance } = adapter({
+      now: () => now,
+      responses: [
+        new Response(page([raw(100)]), { status: 200 }),
+        new Response(page([raw(101), raw(100)]), { status: 200 }),
+      ],
+    });
+    await instance.pollOnce();
+    expect(instance.health().status).toBe("HEALTHY");
+
+    now = new Date("2026-08-23T10:00:30.001Z");
+    expect(instance.health()).toMatchObject({
+      status: "STALE",
+      errorCode: "TECHFLOW_STALE",
+      dataAgeMs: 30_001,
+    });
+
+    await instance.pollOnce();
+    expect(instance.health()).toMatchObject({ status: "HEALTHY", errorCode: null, dataAgeMs: 0 });
+  });
+
+  it("turns an old successful parse into stale even when the latest attempt failed", async () => {
+    let now = new Date("2026-08-23T10:00:00.000Z");
+    const { instance } = adapter({
+      now: () => now,
+      responses: [
+        new Response(page([raw(100)]), { status: 200 }),
+        new Response("failure", { status: 500 }),
+      ],
+    });
+    await instance.pollOnce();
+    now = new Date("2026-08-23T10:00:10.000Z");
+    await expect(instance.pollOnce()).rejects.toThrow("TECHFLOW_HTTP_500");
+    expect(instance.health().status).toBe("ERROR");
+
+    now = new Date("2026-08-23T10:00:30.001Z");
+    expect(instance.health()).toMatchObject({
+      status: "STALE",
+      errorCode: "TECHFLOW_STALE",
+      dataAgeMs: 30_001,
+    });
+    expect(instance.metrics().errorsByCode).toMatchObject({ TECHFLOW_HTTP_500: 1 });
+  });
+
+  it("uses an explicit deadline so a fetch promise that ignores abort cannot stop later polling", async () => {
+    vi.useFakeTimers();
+    try {
+      let calls = 0;
+      const instance = new TechFlowPublicAdapter({
+        pollIntervalMs: 10,
+        requestTimeoutMs: 5,
+        freshnessMs: 30_000,
+        maxItemsPerPoll: 50,
+        bodyExcerptCharacters: 600,
+        cursorStore: new MemoryTechFlowCursorStore(),
+        fetch: async () => {
+          calls += 1;
+          if (calls === 1) return await new Promise<Response>(() => undefined);
+          return new Response(page([raw(102)]), { status: 200 });
+        },
+        now: () => new Date("2026-08-23T10:00:00.000Z"),
+      });
+      instance.start();
+      await vi.advanceTimersByTimeAsync(6);
+      expect(instance.health()).toMatchObject({ status: "ERROR", errorCode: "TECHFLOW_TIMEOUT" });
+      await vi.advanceTimersByTimeAsync(11);
+      expect(calls).toBeGreaterThanOrEqual(2);
+      expect(instance.health().status).toBe("HEALTHY");
+      instance.stop();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

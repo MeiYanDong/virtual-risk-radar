@@ -314,6 +314,7 @@ export type TechFlowAdapterOptions = {
   url?: string;
   pollIntervalMs: number;
   requestTimeoutMs: number;
+  freshnessMs: number;
   maxItemsPerPoll: number;
   bodyExcerptCharacters: number;
   cursorStore: TechFlowCursorStore;
@@ -337,6 +338,7 @@ export type TechFlowSoakMetrics = {
   successRate: number;
   notModified: number;
   messagesSeen: number;
+  currentPageItems: number;
   uniqueItems: number;
   bootstrapItems: number;
   duplicates: number;
@@ -372,6 +374,7 @@ export class TechFlowPublicAdapter {
     successes: 0,
     notModified: 0,
     messages: 0,
+    currentPageItems: 0,
     unique: 0,
     bootstrapItems: 0,
     duplicates: 0,
@@ -398,11 +401,14 @@ export class TechFlowPublicAdapter {
 
   health(): V3SourceHealth {
     const health = structuredClone(this.#lastHealth);
+    const nowMs = (this.#options.now ?? (() => new Date()))().getTime();
     if (health.lastSuccessAt !== null) {
-      health.dataAgeMs = Math.max(
-        0,
-        (this.#options.now ?? (() => new Date()))().getTime() - Date.parse(health.lastSuccessAt),
-      );
+      health.dataAgeMs = Math.max(0, nowMs - Date.parse(health.lastSuccessAt));
+      if (health.dataAgeMs > this.#options.freshnessMs) {
+        health.status = "STALE";
+        health.errorCode = "TECHFLOW_STALE";
+        health.reason = `No successful semantic refresh for ${health.dataAgeMs} ms; freshness limit is ${this.#options.freshnessMs} ms`;
+      }
     }
     return V3SourceHealthSchema.parse(health);
   }
@@ -418,6 +424,7 @@ export class TechFlowPublicAdapter {
       successRate: this.#stats.attempts === 0 ? 0 : this.#stats.successes / this.#stats.attempts,
       notModified: this.#stats.notModified,
       messagesSeen: this.#stats.messages,
+      currentPageItems: this.#stats.currentPageItems,
       uniqueItems: this.#stats.unique,
       bootstrapItems: this.#stats.bootstrapItems,
       duplicates: this.#stats.duplicates,
@@ -444,7 +451,13 @@ export class TechFlowPublicAdapter {
     this.#firstAttemptAt ??= now;
     this.#lastAttemptAt = now;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.#options.requestTimeoutMs);
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_resolve, reject) => {
+      timeout = setTimeout(() => {
+        controller.abort();
+        reject(new Error("TECHFLOW_TIMEOUT"));
+      }, this.#options.requestTimeoutMs);
+    });
     try {
       const headers = new Headers({
         Accept: "text/html,application/xhtml+xml",
@@ -456,12 +469,15 @@ export class TechFlowPublicAdapter {
       if (this.#cursor?.lastModified !== null && this.#cursor?.lastModified !== undefined) {
         headers.set("If-Modified-Since", this.#cursor.lastModified);
       }
-      const response = await (this.#options.fetch ?? fetch)(this.#options.url ?? SOURCE_URL, {
-        method: "GET",
-        headers,
-        redirect: "follow",
-        signal: controller.signal,
-      });
+      const response = await Promise.race([
+        (this.#options.fetch ?? fetch)(this.#options.url ?? SOURCE_URL, {
+          method: "GET",
+          headers,
+          redirect: "follow",
+          signal: controller.signal,
+        }),
+        deadline,
+      ]);
       if (response.status === 304) {
         this.#stats.successes += 1;
         this.#stats.notModified += 1;
@@ -476,9 +492,10 @@ export class TechFlowPublicAdapter {
         return { items: [], health: this.health(), coverageGap: null, notModified: true };
       }
       if (!response.ok) throw new Error(`TECHFLOW_HTTP_${response.status}`);
-      const html = await response.text();
+      const html = await Promise.race([response.text(), deadline]);
       this.#lastEvidenceId = `techflow-page-${Date.parse(now)}-${sha256(html).slice(-12)}`;
       const rawItems = parseTechFlowListHtml(html).slice(0, this.#options.maxItemsPerPoll);
+      this.#stats.currentPageItems = rawItems.length;
       this.#stats.messages += rawItems.length;
       const previous = this.#cursor;
       const bootstrap = previous === null;
@@ -587,7 +604,7 @@ export class TechFlowPublicAdapter {
       });
       throw error;
     } finally {
-      clearTimeout(timeout);
+      if (timeout !== undefined) clearTimeout(timeout);
     }
   }
 

@@ -10,6 +10,7 @@ curl --fail http://127.0.0.1:8787/api/health
 curl --fail http://127.0.0.1:8787/api/sources
 curl --fail http://127.0.0.1:8787/api/data-health
 curl --fail http://127.0.0.1:8787/api/soak/current
+curl --fail 'http://127.0.0.1:8787/api/news/audit?limit=10'
 ```
 
 健康 readback 必须显示 `externalInputCount=2`，来源只能是 `techflow-public-newsletter` 与 `binance-spot-public`。`rpc/dexQuote/walletRead/writeCapabilities` 必须为 `UNSUPPORTED`。
@@ -18,12 +19,14 @@ curl --fail http://127.0.0.1:8787/api/soak/current
 
 ## 持久化文件
 
-- `data/runtime/techflow-cursor.json`：最近列表 ID、内容 hash、revision、ETag 与 Last-Modified；重启后去重。
-- `data/runtime/v3-shadow-v0.3.1.jsonl`：当前 `0600` append-only 运行证据；含启动/停止、源快照、事件、gap、阶段变化和 Shadow 参考卖出。
+- `data/runtime/techflow-cursor-v0.3.2.json`：当前列表 ID、内容 hash、revision、ETag 与 Last-Modified；重启后去重。本路径首次启用时把当时公开列表作为审计起点。
+- `data/runtime/v3-news-audit-v0.3.2.jsonl`：当前 `0600` 新闻审计记录；保存规范化字段、最多 600 字摘要、四步判断和全部 revision，保留 180 天。
+- `data/runtime/v3-shadow-v0.3.2.jsonl`：当前 `0600` append-only 运行证据；含启动/停止、源快照、事件、gap、阶段变化和 Shadow 参考卖出。
+- `data/runtime/v3-shadow-v0.3.1.jsonl`：30 秒 TechFlow freshness 生效前的旧配置 epoch，原样保留但不得与 v0.3.2 连续 Shadow 时间混算。
 - `data/runtime/v3-shadow.jsonl`：性能修复前的诊断证据，原样保留但不计入 v0.3.1 的 60 分钟/14 天进度。
 - `output/reports/v3-shadow-status.json`：由 `pnpm shadow:report:v3`生成的可再生报告。
 
-不要手工改写 cursor 或 journal。怀疑损坏时先停止运行、复制原文件保全证据，再用新的显式路径做恢复测试；不要删除原证据。Journal 在序号断裂或 payload hash 不匹配时 fail closed。
+不要手工改写 cursor 或 journal。怀疑损坏时先停止运行、复制原文件保全证据，再用新的显式路径做恢复测试；不要删除原证据。Shadow journal 在序号断裂或 payload hash 不匹配时 fail closed；新闻审计在 schema/hash 损坏或同一 revision 判断冲突时 fail closed。
 
 ## TechFlow 故障
 
@@ -34,8 +37,10 @@ curl --fail http://127.0.0.1:8787/api/soak/current
 | 空列表/schema 漂移 | `TECHFLOW_SCHEMA_DRIFT_OR_EMPTY_LIST` | 保存最小公开 fixture，修 parser 与回归测试后再恢复 |
 | cursor 不在可见页 | `COVERAGE_GAP/DEGRADED` | 记录漏页区间；不得用旧事件冒充新鲜 |
 | 304 | 视为条件请求成功 | 不产生重复事件 |
+| 最后成功解析超过 30 秒 | 页面显示“新闻监测延迟”，依赖条件 `STALE` | 等待下一次语义解析；错误和 gap 计数保留 |
+| fetch 或 body 卡住 | 8 秒显式截止并继续后续轮询 | 检查累计 timeout；不得让一次悬挂永久停止采集 |
 
-TechFlow 没有已验证 SLA、API、RSS 或再分发许可。API 只返回内部决策元数据，不提供正文导出。
+TechFlow 没有已验证 SLA、API、RSS 或再分发许可。`/api/news/audit` 只返回本地规范化元数据、判断和最多 600 字必要摘要；不提供完整正文或正文批量导出。`/news` 的“每一条”只指本功能启用后 adapter 实际观察到的公开列表项，停机和漏页不会被伪装成完整历史。
 
 ## Binance Spot 故障
 

@@ -7,6 +7,7 @@ import type {
   SourceHealth,
 } from "./types";
 import "./styles.css";
+import NewsAuditPage from "./NewsAuditPage";
 
 const virtualPrice = new Intl.NumberFormat("zh-CN", {
   minimumFractionDigits: 4,
@@ -121,6 +122,9 @@ function MacroContext({ event }: { event: DashboardState["latestMacroEvent"] }) 
         <div className="section-label">最新宏观消息</div>
         <h2>暂未发现新的高风险事件</h2>
         <p>TechFlow 正在持续监测全球宏观、政策、贸易与地缘风险。</p>
+        <a className="macro-card__audit-link" href="/news">
+          查看全部新闻判断 →
+        </a>
       </section>
     );
   }
@@ -134,6 +138,9 @@ function MacroContext({ event }: { event: DashboardState["latestMacroEvent"] }) 
         <span>{macroSeverity[event.severity] ?? "影响待确认"}</span>
         <time>{formatTime(event.receivedAt)}</time>
       </div>
+      <a className="macro-card__audit-link" href="/news">
+        查看全部新闻判断 →
+      </a>
     </section>
   );
 }
@@ -440,7 +447,7 @@ export function Dashboard({ state }: { state: DashboardState }) {
   );
 }
 
-export default function App() {
+function DashboardApplication() {
   const [state, setState] = useState<DashboardState | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -491,4 +498,8 @@ export default function App() {
     );
   }
   return <Dashboard state={state} />;
+}
+
+export default function App() {
+  return window.location.pathname === "/news" ? <NewsAuditPage /> : <DashboardApplication />;
 }

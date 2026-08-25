@@ -11,6 +11,7 @@ import {
   type V3SourceHealth,
 } from "@virtual/domain";
 import type { V3MarketFeatureSnapshot } from "@virtual/market";
+import { qualifiesForMacroObservation } from "./news-audit";
 
 type TimerName = "sellPressure" | "relativeRecovery" | "flowNormalization";
 
@@ -82,18 +83,8 @@ function latestQualifyingMacro(
 ): V3NewsItem | undefined {
   return [...items]
     .filter(({ receivedAt }) => Date.parse(receivedAt) <= Date.parse(now))
-    .filter(
-      ({ sourceOccurredAt }) =>
-        sourceOccurredAt !== null &&
-        Date.parse(sourceOccurredAt) <= Date.parse(now) &&
-        Date.parse(now) - Date.parse(sourceOccurredAt) <= maximumAgeSeconds * 1_000,
-    )
-    .filter(
-      ({ macroRelevant, direction, severity }) =>
-        macroRelevant && direction === "RISK_OFF" && ["HIGH", "SYSTEMIC"].includes(severity),
-    )
-    .filter(
-      ({ receivedAt }) => Date.parse(now) - Date.parse(receivedAt) <= maximumAgeSeconds * 1_000,
+    .filter((item) =>
+      qualifiesForMacroObservation({ item, now, armWindowSeconds: maximumAgeSeconds }),
     )
     .sort((left, right) => Date.parse(right.receivedAt) - Date.parse(left.receivedAt))[0];
 }

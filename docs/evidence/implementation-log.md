@@ -155,3 +155,18 @@
 - 极端市场备用阈值：`NOT_CALIBRATED`。
 - 签名/授权/广播：`UNSUPPORTED`。
 - 经济结论：`POSITIVE_EV_NOT_PROVEN`。
+
+## 2026-08-24 / Batch 9 / TechFlow 逐条新闻审计中心
+
+状态：`COMPLETE_LOCAL / CURRENT_PROCESS_VERIFIED / REMOTE_CI_NOT_RUN`
+
+- `V3-F2-001`—`V3-F2-025` 已实现：每个被 TechFlow adapter 实际观察到的独立快讯及其 revision 都经过同一套确定性四项 gate，得到“进入风险观察 / 未进入风险观察 / 需要人工复核”之一；过滤不再等于消失。
+- 新增私有 append-only `data/runtime/v3-news-audit-v0.3.2.jsonl`，标题与摘要受限、完整正文不落库，重复 hash 幂等、revision 不覆盖、重启恢复、180 天原子清理；审计、cursor 与 Shadow 文件当前权限均为 `0600` 且由 Git ignore 排除。
+- TechFlow 当前新鲜度门禁固定为 30 秒；fetch 与 body 各有显式 deadline，静默或卡死不能沿用旧健康状态，也不能永久阻塞后续轮询。
+- 新增只读 `GET /api/news/audit` 和 `GET /api/news/audit/:source_item_id`；OpenAPI 当前为 17 个 GET 路径且无 POST/PUT/PATCH/DELETE。列表支持结果、关键词、cursor 和 limit，详情只返回必要摘要及全部 revision，不返回完整正文。
+- 新增 `/news` 二级页面和首页入口；页面显示采集心跳、结果计数、筛选/搜索、逐条中文结论、原因、官网核对链接、四项判断路径与 revision 历史，不显示原生枚举、ID、hash 或概率。
+- 当前进程快照（2026-08-23T16:11:59Z）：9 条独立 TechFlow 快讯全部可查询并各有判断；该时点结果为 0 条进入、9 条未进入、0 条需复核。此分布只是当时真实数据，不代替三种结果的测试覆盖。采集累计 65 次尝试、62 次成功、2 次 `fetch failed`、0 gap；随后 `/api/health` 读回 TechFlow 与 Binance 均为 `HEALTHY`，错误没有被隐藏。
+- 浏览器收据：`output/playwright/v3-news-audit-desktop.png`、`output/playwright/v3-news-audit-mobile.png`、`output/playwright/v3-news-audit-mobile-expanded.png`。390×844 下 `scrollWidth=clientWidth=390`；键盘 `Tab + Enter` 可展开；入口、直达、刷新、前进/后退、筛选、搜索和详情均通过；页面原生字段扫描为空，控制台 0 error / 0 warning。
+- 本地最终门禁：`pnpm run ci` PASS；Biome 126 files、`READ_ONLY_BOUNDARY_OK scanned=212`、TypeScript、30 schemas、10 fixtures、31 files / 230 tests、statements 89.98% / branches 81.43% / functions 92.13% / lines 93.15%、Python 8 tests、Node/Python 漏洞审计、许可证和 Vite production build 全部通过。
+- 历史完整性只从本功能启用后开始；停机期间未观察到或列表已移除的新闻不能回填成“已审计”。确定性规则仍需逐条人工比对和至少 30 个跨类型事件验证，经济结论保持 `POSITIVE_EV_NOT_PROVEN`。
+- 当前改动仍在本地工作树，尚未 commit/push；远端 Actions run 32646971643 只覆盖旧提交，本批次远端 CI 为 `NOT_RUN`。CD 仍为 `NOT_CONFIGURED`，没有部署后 readback。

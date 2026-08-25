@@ -1,12 +1,18 @@
 import { resolve } from "node:path";
 import type { ActiveSystemConfig } from "@virtual/config";
-import { V3DecisionEngine, type V3DecisionResult } from "@virtual/decision";
+import {
+  V3DecisionEngine,
+  evaluateNewsAuditJudgment,
+  type V3DecisionResult,
+} from "@virtual/decision";
 import {
   V3DashboardStateSchema,
   timestamp,
   type Timestamp,
   type V3DashboardState,
   type V3MarketTick,
+  type V3NewsAuditRecord,
+  type V3NewsAuditJudgment,
   type V3NewsItem,
   type V3TimelineEvent,
 } from "@virtual/domain";
@@ -17,12 +23,34 @@ import {
   type TechFlowSoakMetrics,
 } from "@virtual/news";
 import type { BinanceSoakMetrics } from "@virtual/market";
-import { V3ShadowJournal, type V3ShadowJournalRecord } from "@virtual/storage";
+import { NewsAuditJournal, V3ShadowJournal, type V3ShadowJournalRecord } from "@virtual/storage";
 import { createWarmupDashboardState } from "./v3-state";
 
 export type V3RuntimeReader = {
   snapshot(): V3DashboardState;
   metrics?(): V3RuntimeMetrics;
+  newsAudit?(query: V3NewsAuditQuery): Promise<V3NewsAuditPage>;
+  newsAuditDetails?(sourceItemId: string): Promise<readonly V3NewsAuditRecord[]>;
+};
+
+export type V3NewsAuditQuery = {
+  outcome?: V3NewsAuditJudgment["outcome"];
+  query?: string;
+  cursor?: string;
+  limit: number;
+};
+
+export type V3NewsAuditListItem = {
+  record: V3NewsAuditRecord;
+  revisionCount: number;
+};
+
+export type V3NewsAuditPage = {
+  items: V3NewsAuditListItem[];
+  total: number;
+  filteredTotal: number;
+  counts: Record<V3NewsAuditJudgment["outcome"], number>;
+  nextCursor: string | null;
 };
 
 export type V3RuntimeMetrics = {
@@ -42,6 +70,7 @@ export type V3RuntimeOptions = {
   binanceSocketFactory?: ConstructorParameters<typeof BinanceSpotAdapter>[0]["socketFactory"];
   cursorPath?: string;
   journalPath?: string;
+  newsAuditPath?: string;
 };
 
 export class V3Runtime implements V3RuntimeReader {
@@ -52,6 +81,7 @@ export class V3Runtime implements V3RuntimeReader {
   readonly #marketWindow: V3MarketWindow;
   readonly #decisionEngine: V3DecisionEngine;
   readonly #journal: V3ShadowJournal;
+  readonly #newsAuditJournal: NewsAuditJournal;
   readonly #news = new Map<string, V3NewsItem>();
   readonly #timeline: V3TimelineEvent[] = [];
   #state: V3DashboardState;
@@ -61,6 +91,7 @@ export class V3Runtime implements V3RuntimeReader {
   #previousRebuyStage: string | null = null;
   #lastJournalSnapshotAt: Timestamp | null = null;
   #journalErrorRecorded = false;
+  #newsAuditErrorRecorded = false;
   #startedAt: Timestamp | null = null;
 
   constructor(config: ActiveSystemConfig, options: V3RuntimeOptions = {}) {
@@ -76,10 +107,15 @@ export class V3Runtime implements V3RuntimeReader {
     this.#journal = new V3ShadowJournal(
       options.journalPath ?? resolve(process.cwd(), config.retention.journalPath),
     );
+    this.#newsAuditJournal = new NewsAuditJournal(
+      options.newsAuditPath ?? resolve(process.cwd(), config.retention.newsAuditPath),
+      { retentionDays: config.retention.rawDays, now: this.#now },
+    );
     this.#newsAdapter = new TechFlowPublicAdapter({
       url: config.newsSource.url,
       pollIntervalMs: config.newsSource.pollIntervalMs,
       requestTimeoutMs: config.newsSource.requestTimeoutMs,
+      freshnessMs: config.newsSource.freshnessSeconds * 1_000,
       maxItemsPerPoll: config.newsSource.maxItemsPerPoll,
       bodyExcerptCharacters: config.newsSource.bodyExcerptCharacters,
       cursorStore: new FileTechFlowCursorStore(
@@ -108,8 +144,9 @@ export class V3Runtime implements V3RuntimeReader {
     });
   }
 
-  start(): void {
+  async start(): Promise<void> {
     if (this.#running) return;
+    await this.#restoreNewsAudit();
     this.#running = true;
     this.#startedAt = timestamp(this.#now());
     this.#recordTimeline({
@@ -135,6 +172,7 @@ export class V3Runtime implements V3RuntimeReader {
   async stop(): Promise<void> {
     if (!this.#running) {
       await this.#journal.flush();
+      await this.#newsAuditJournal.flush();
       return;
     }
     this.#running = false;
@@ -148,10 +186,91 @@ export class V3Runtime implements V3RuntimeReader {
       marketMessages: this.#state.sources.binance.messagesReceived,
     });
     await this.#journal.flush();
+    await this.#newsAuditJournal.flush();
   }
 
   async flushJournal(): Promise<void> {
     await this.#journal.flush();
+    await this.#newsAuditJournal.flush();
+  }
+
+  async newsAudit(query: V3NewsAuditQuery): Promise<V3NewsAuditPage> {
+    const records = [...(await this.#newsAuditJournal.list())];
+    const grouped = new Map<string, V3NewsAuditRecord[]>();
+    for (const record of records) {
+      const revisions = grouped.get(record.item.sourceItemId) ?? [];
+      revisions.push(record);
+      grouped.set(record.item.sourceItemId, revisions);
+    }
+    const latest = [...grouped.values()]
+      .map((revisions) => {
+        const ordered = [...revisions].sort(
+          (left, right) =>
+            right.item.revision - left.item.revision ||
+            Date.parse(right.judgment.judgedAt) - Date.parse(left.judgment.judgedAt),
+        );
+        const record = ordered[0];
+        if (record === undefined) throw new Error("News audit group is unexpectedly empty");
+        const firstReceivedAt = revisions.reduce(
+          (earliest, candidate) =>
+            Date.parse(candidate.item.receivedAt) < Date.parse(earliest)
+              ? candidate.item.receivedAt
+              : earliest,
+          record.item.receivedAt,
+        );
+        return { record, revisionCount: revisions.length, firstReceivedAt };
+      })
+      .sort(
+        (left, right) =>
+          Date.parse(right.firstReceivedAt) - Date.parse(left.firstReceivedAt) ||
+          right.record.item.sourceItemId.localeCompare(left.record.item.sourceItemId, "en", {
+            numeric: true,
+          }),
+      );
+    const counts: V3NewsAuditPage["counts"] = {
+      ENTERED_RISK_OBSERVATION: 0,
+      NOT_TRIGGERED: 0,
+      REVIEW_REQUIRED: 0,
+    };
+    for (const { record } of latest) counts[record.judgment.outcome] += 1;
+    const normalizedQuery = query.query?.trim().toLocaleLowerCase("zh-CN") ?? "";
+    const filtered = latest.filter(({ record }) => {
+      if (query.outcome !== undefined && record.judgment.outcome !== query.outcome) return false;
+      if (normalizedQuery.length === 0) return true;
+      return [
+        record.item.headline,
+        record.item.bodyExcerpt,
+        record.item.sourceAttribution ?? "",
+        record.judgment.summary,
+      ].some((value) => value.toLocaleLowerCase("zh-CN").includes(normalizedQuery));
+    });
+    const cursorIndex =
+      query.cursor === undefined
+        ? -1
+        : filtered.findIndex(({ record }) => record.recordId === query.cursor);
+    const start = cursorIndex >= 0 ? cursorIndex + 1 : 0;
+    const pageItems = filtered.slice(start, start + query.limit);
+    const hasMore = start + pageItems.length < filtered.length;
+    return {
+      items: pageItems.map(({ record, revisionCount }) =>
+        structuredClone({ record, revisionCount }),
+      ),
+      total: latest.length,
+      filteredTotal: filtered.length,
+      counts,
+      nextCursor: hasMore ? (pageItems.at(-1)?.record.recordId ?? null) : null,
+    };
+  }
+
+  async newsAuditDetails(sourceItemId: string): Promise<readonly V3NewsAuditRecord[]> {
+    return (await this.#newsAuditJournal.list())
+      .filter((record) => record.item.sourceItemId === sourceItemId)
+      .sort(
+        (left, right) =>
+          right.item.revision - left.item.revision ||
+          Date.parse(right.judgment.judgedAt) - Date.parse(left.judgment.judgedAt),
+      )
+      .map((record) => structuredClone(record));
   }
 
   snapshot(): V3DashboardState {
@@ -192,6 +311,24 @@ export class V3Runtime implements V3RuntimeReader {
     const previous = this.#news.get(item.sourceItemId);
     if (previous !== undefined && previous.revision > item.revision) return;
     this.#news.set(item.sourceItemId, structuredClone(item));
+    const judgment = evaluateNewsAuditJudgment({
+      item,
+      now: item.receivedAt,
+      armWindowSeconds: this.#config.newsSource.macroArmWindowSeconds,
+      modelVersion: this.#config.modelVersion,
+      configVersion: this.#config.configVersion,
+    });
+    void this.#newsAuditJournal.append({ item, judgment }).catch((error: unknown) => {
+      if (this.#newsAuditErrorRecorded) return;
+      this.#newsAuditErrorRecorded = true;
+      this.#recordTimeline({
+        eventId: `news-audit-error-${Date.parse(item.receivedAt)}`,
+        at: item.receivedAt,
+        kind: "SYSTEM",
+        message: "News audit persistence failed; the audit page may be incomplete",
+        evidence: error instanceof Error ? error.message : "NEWS_AUDIT_WRITE_ERROR",
+      });
+    });
     this.#appendJournal("NEWS_OBSERVED", item.receivedAt, {
       observationId: item.observationId,
       sourceItemId: item.sourceItemId,
@@ -208,6 +345,16 @@ export class V3Runtime implements V3RuntimeReader {
       message: `${item.eventType} / ${item.direction} / ${item.severity} · ${item.headline}`,
       evidence: item.rawTextHash,
     });
+  }
+
+  async #restoreNewsAudit(): Promise<void> {
+    const records = await this.#newsAuditJournal.list();
+    for (const { item } of records) {
+      const previous = this.#news.get(item.sourceItemId);
+      if (previous === undefined || item.revision >= previous.revision) {
+        this.#news.set(item.sourceItemId, structuredClone(item));
+      }
+    }
   }
 
   #recordMarket(tick: V3MarketTick, gap: string | null): void {

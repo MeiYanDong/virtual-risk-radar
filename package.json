@@ -28,6 +28,8 @@
     "python:check": "sh scripts/check-python.sh",
     "schema:generate": "tsx scripts/generate-schemas.ts",
     "schema:check": "tsx scripts/check-schemas.ts",
+    "deploy:check": "bash -n deploy/bootstrap-host.sh deploy/install-release.sh scripts/build-deployment-artifact.sh scripts/deploy-swas-release.sh && vitest run tests/unit/deployment-assets.test.ts",
+    "deploy:artifact": "bash scripts/build-deployment-artifact.sh",
     "legacy:v0.2:fixture:capture:2026-08-22": "tsx scripts/capture-2026-08-22-fixture.ts",
     "legacy:v0.2:fixture:analyze:2026-08-22": "tsx scripts/analyze-2026-08-22-fixture.ts",
     "fixture:analyze:v3:2026-08-22": "tsx scripts/analyze-v3-2026-08-22.ts",
@@ -39,7 +41,7 @@
     "shadow:report:v3": "tsx scripts/report-v3-shadow.ts",
     "build:web": "vite build --config apps/web/vite.config.ts",
     "build": "pnpm typecheck && pnpm build:web",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm schema:check && pnpm legacy:v0.2:fixture:verify:2026-08-22 && pnpm test:coverage && pnpm python:check && pnpm security:audit && pnpm license:check && pnpm build:web && pnpm security:scan",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm schema:check && pnpm deploy:check && pnpm legacy:v0.2:fixture:verify:2026-08-22 && pnpm test:coverage && pnpm python:check && pnpm security:audit && pnpm license:check && pnpm build:web && pnpm security:scan",
     "ci": "pnpm check"
   },
   "dependencies": {
@@ -48,6 +50,7 @@
     "fastify": "5.12.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",
+    "tsx": "4.20.5",
     "viem": "2.55.19",
     "zod": "4.1.5"
   },
@@ -61,7 +64,6 @@
     "@vitejs/plugin-react": "6.1.0",
     "@vitest/coverage-v8": "4.1.11",
     "jsdom": "26.1.0",
-    "tsx": "4.20.5",
     "typescript": "5.9.2",
     "vite": "8.2.2",
     "vitest": "4.1.11"

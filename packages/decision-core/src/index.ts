@@ -5,3 +5,4 @@ export * from "./engine";
 export * from "./state-machine";
 export * from "./transitions";
 export * from "./v3-engine";
+export * from "./news-audit";

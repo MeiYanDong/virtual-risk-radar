@@ -9,6 +9,8 @@
 
 系统分别展示 Sell 与 Rebuy 的四项条件进度。默认前端只用自然中文回答“现在要不要操作、满足了什么、还差什么”；原生状态、阈值、来源和证据 ID 保留在后台审计层。新闻不能单独触发卖出；正常 Sell 路径必须四项全部通过。
 
+首页的“查看全部新闻判断”进入独立 `/news` 审计页。该页面展示功能启用后程序实际观察到的每条 TechFlow 独立快讯，包括被判定为“未进入风险观察”的新闻，并给出四步中文判断、必要摘要和官网核对链接。它不会声称补齐停机期间或公开列表之外从未看到的新闻。
+
 ## 当前边界
 
 - 输出仅为 `CEX_REFERENCE`，不代表 DEX 可成交价格或收益。
@@ -17,6 +19,13 @@
 - 极端 market-only 路径仍为 `NOT_CALIBRATED`。
 - 历史与实时经济证据仍为 `POSITIVE_EV_NOT_PROVEN`。
 - TechFlow 是公开网页入口，不是已验证的官方 API/RSS；没有 SLA，页面结构可能变化。
+- TechFlow 距最后一次成功语义解析超过 30 秒即显示延迟并使依赖条件降级；审计记录仅在本地私有保存 180 天。
+
+## 云端目标（尚未部署）
+
+2026-08-25 已为本项目购买独立的阿里云美国西海岸 SWAS：`virtual-risk-radar-us-west`，公网 IP `47.251.165.112`，Ubuntu 24.04，2 vCPU / 2 GiB / 40 GiB ESSD，费用 56 元、周期 1 个月且关闭自动续费。控制面已读回 `Running`，但应用、CD、域名、TLS、备份与部署后 runtime readback 均未配置；本地页面仍是当前运行入口。
+
+购买与安全边界见 [2026-08-25 SWAS 购买回执](docs/evidence/2026-08-25-swas-purchase.md)。
 
 v0.2 的 Base RPC/DEX quote、衍生品和多新闻源研究代码与收据暂时保留作历史证据，但不在 v0.3 composition root、默认配置、API 或 UI 中可达。相关命令统一使用 `legacy:v0.2:*` 前缀。
 
@@ -36,15 +45,16 @@ pnpm start
 pnpm dev:web
 ```
 
-打开 <http://127.0.0.1:5173>。API 默认位于 <http://127.0.0.1:8787>。
+打开 <http://127.0.0.1:5173>；逐条新闻审计位于 <http://127.0.0.1:5173/news>。API 默认位于 <http://127.0.0.1:8787>。
 
 ```sh
 curl --fail http://127.0.0.1:8787/api/health
 curl --fail http://127.0.0.1:8787/api/state
 curl --fail http://127.0.0.1:8787/api/soak/current
+curl --fail 'http://127.0.0.1:8787/api/news/audit?limit=10'
 ```
 
-运行时会在 `data/runtime/` 保存 TechFlow cursor 与 `0600` append-only Shadow 日志。生成当前进度报告：
+运行时会在 `data/runtime/` 保存 `0600` 的 TechFlow cursor、append-only Shadow journal 和新闻审计 journal。新闻审计只保存规范化元数据、链接、最多 600 字摘要、不可覆盖判断与 revision，不保存完整正文；整个 `data/` 目录由 Git 排除。生成当前进度报告：
 
 ```sh
 pnpm shadow:report:v3

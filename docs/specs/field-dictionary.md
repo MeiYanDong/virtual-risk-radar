@@ -48,6 +48,18 @@
 | `amplificationCount` | 同一主张的重复传播节点数 | clusterer | int | attention only | 不得提高 fact confidence |
 | `observationIds/evidenceIds` | 成员与支持证据 | observations/ledger | list | 审计 | 至少一个 observation |
 
+## V3NewsAuditRecord
+
+| 字段 | 定义 | 来源 | 单位/类型 | 决策用途 | 缺失规则 |
+|---|---|---|---|---|---|
+| `recordId/recordHash` | 新闻 ID、revision 与内容 hash 派生的稳定记录 ID，以及 item+judgment 的 canonical SHA-256 | audit journal | string/hash | 幂等、防篡改 | 必填；同 ID 不同 hash 拒绝 |
+| `item` | 当次完整规范化 TechFlow 新闻；摘要最多 600 字 | TechFlow adapter | `V3NewsItem` | 展示、核对、重启恢复 | 不保存完整正文；schema 不符拒绝 |
+| `judgment.outcome` | `ENTERED_RISK_OBSERVATION/NOT_TRIGGERED/REVIEW_REQUIRED` 三选一 | deterministic gate | enum | 新闻观察门禁 | 不得为空或多结果 |
+| `judgment.checks` | 宏观相关、风险方向、影响程度、观察窗口四项固定顺序判断 | deterministic gate | length=4 | 中文解释与 Sell 新闻条件一致性 | 每项必须有 state/current/reason |
+| `judgedAt` | 首次收到该 revision 时的冻结判断时间 | 系统时钟 | Timestamp | 防未来函数、retention | 不得在重启时重算覆盖 |
+| `observationWindowEndsAt` | 来源发生与系统接收两种时限中较早的截止时间 | gate | Timestamp/null | 时效解释 | 来源时间未知时为 null 并复核 |
+| `ruleVersion/modelVersion/configVersion` | 当次判断使用的规则、模型和配置 | code/config | string | 回放和变更审计 | 必填；新版本不能覆盖旧记录 |
+
 ## MarketObservation
 
 | 字段 | 定义 | 来源 | 单位/类型 | 决策用途 | 缺失规则 |

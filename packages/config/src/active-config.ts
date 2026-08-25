@@ -41,6 +41,7 @@ export const ActiveSystemConfigSchema = z
         rawDays: z.number().int().positive(),
         cursorPath: z.string().min(1),
         journalPath: z.string().min(1),
+        newsAuditPath: z.string().min(1),
       })
       .strict(),
     newsSource: z

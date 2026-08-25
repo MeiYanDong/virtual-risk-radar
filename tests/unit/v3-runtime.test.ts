@@ -64,7 +64,7 @@ function trade(symbol: string, id: number, time: number) {
 }
 
 function techFlowPage() {
-  const item = {
+  const macro = {
     id: 3001,
     title: "全球贸易谈判暂停，主要经济体加征 50% 关税",
     abstract: "多国宣布同等幅度反制，全球贸易风险升级。",
@@ -75,9 +75,27 @@ function techFlowPage() {
     category: { id: 1, name: "股市观察" },
     content_categories: [],
   };
+  const ordinary = {
+    ...macro,
+    id: 3002,
+    title: "某项目发布新版开发工具",
+    abstract: "团队公布产品路线图。",
+    url: "https://example.com/ordinary",
+    created_at: "2026-08-23T09:59:00.000Z",
+    updated_at: "2026-08-23T09:59:00.000Z",
+  };
+  const review = {
+    ...macro,
+    id: 3003,
+    title: "美联储召开重大政策会议",
+    abstract: "市场等待进一步信息。",
+    url: "https://example.com/review",
+    created_at: "2026-08-23T09:58:00.000Z",
+    updated_at: "2026-08-23T09:58:00.000Z",
+  };
   return `<html><script>self.__next_f.push(${JSON.stringify([
     1,
-    `fixture:${JSON.stringify({ data: [item] })}`,
+    `fixture:${JSON.stringify({ data: [macro, ordinary, review] })}`,
   ])})</script></html>`;
 }
 
@@ -96,10 +114,11 @@ describe("v0.3 runtime composition", () => {
       now: () => now,
       cursorPath: join(directory, "cursor.json"),
       journalPath: join(directory, "shadow.jsonl"),
+      newsAuditPath: join(directory, "news-audit.jsonl"),
       techFlowFetch: async () => new Response(techFlowPage(), { status: 200 }),
       binanceSocketFactory: () => socket,
     });
-    runtime.start();
+    await runtime.start();
     socket.emit("open");
 
     await vi.waitFor(() => {
@@ -129,6 +148,7 @@ describe("v0.3 runtime composition", () => {
       socket.emit("message", JSON.stringify(trade(symbol, id, now.getTime())));
       id += 1;
     }
+    await runtime.newsAdapter().pollOnce();
     const armed = runtime.snapshot();
     expect(armed.sell).toMatchObject({ stage: "NEWS_ARMED", passed: 3, output: "WATCH" });
 
@@ -165,9 +185,33 @@ describe("v0.3 runtime composition", () => {
       elapsedMs: 64_000,
       requiredSoakMs: 3_600_000,
       soakStatus: "IN_PROGRESS",
-      techflow: { successes: 1 },
+      techflow: { successes: 2 },
       binance: { sourceId: "binance-spot-public" },
     });
+    expect(await runtime.newsAudit({ limit: 50 })).toMatchObject({
+      total: 3,
+      filteredTotal: 3,
+      counts: { ENTERED_RISK_OBSERVATION: 1, NOT_TRIGGERED: 1, REVIEW_REQUIRED: 1 },
+    });
+    expect(
+      (await runtime.newsAudit({ limit: 50 })).items.map(({ record }) => record.judgment.outcome),
+    ).toEqual(
+      expect.arrayContaining(["ENTERED_RISK_OBSERVATION", "NOT_TRIGGERED", "REVIEW_REQUIRED"]),
+    );
+    expect(
+      await runtime.newsAudit({ outcome: "NOT_TRIGGERED", query: "开发工具", limit: 1 }),
+    ).toMatchObject({ filteredTotal: 1, items: [expect.any(Object)], nextCursor: null });
+    const firstAuditPage = await runtime.newsAudit({ limit: 1 });
+    expect(firstAuditPage).toMatchObject({ filteredTotal: 3, items: [expect.any(Object)] });
+    expect(firstAuditPage.nextCursor).not.toBeNull();
+    if (firstAuditPage.nextCursor === null) throw new Error("Expected a second news audit page");
+    const secondAuditPage = await runtime.newsAudit({
+      limit: 1,
+      cursor: firstAuditPage.nextCursor,
+    });
+    expect(secondAuditPage.items[0]?.record.recordId).not.toBe(
+      firstAuditPage.items[0]?.record.recordId,
+    );
     await runtime.stop();
     const records = (await readFile(join(directory, "shadow.jsonl"), "utf8"))
       .trim()

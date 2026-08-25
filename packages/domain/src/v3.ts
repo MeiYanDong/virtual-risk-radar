@@ -73,6 +73,42 @@ export const V3NewsItemSchema = z
   .strict();
 export type V3NewsItem = z.infer<typeof V3NewsItemSchema>;
 
+export const V3NewsAuditCheckSchema = z
+  .object({
+    id: z.enum(["MACRO_RELEVANCE", "RISK_DIRECTION", "IMPACT_SEVERITY", "OBSERVATION_WINDOW"]),
+    state: z.enum(["PASS", "FAIL", "REVIEW_REQUIRED", "NOT_APPLICABLE"]),
+    label: z.string().min(1),
+    current: z.string().min(1),
+    reason: z.string().min(1),
+  })
+  .strict();
+export type V3NewsAuditCheck = z.infer<typeof V3NewsAuditCheckSchema>;
+
+export const V3NewsAuditJudgmentSchema = z
+  .object({
+    outcome: z.enum(["ENTERED_RISK_OBSERVATION", "NOT_TRIGGERED", "REVIEW_REQUIRED"]),
+    summary: z.string().min(1),
+    checks: z.array(V3NewsAuditCheckSchema).length(4),
+    judgedAt: TimestampSchema,
+    observationWindowEndsAt: TimestampSchema.nullable(),
+    ruleVersion: z.literal("news-gate-v1"),
+    modelVersion: z.string().min(1),
+    configVersion: z.string().min(1),
+  })
+  .strict();
+export type V3NewsAuditJudgment = z.infer<typeof V3NewsAuditJudgmentSchema>;
+
+export const V3NewsAuditRecordSchema = z
+  .object({
+    schemaVersion: z.literal("1.0.0"),
+    recordId: z.string().regex(/^news-audit-[0-9]+-r\d+-[0-9a-f]{12}$/),
+    recordHash: HashSchema,
+    item: V3NewsItemSchema,
+    judgment: V3NewsAuditJudgmentSchema,
+  })
+  .strict();
+export type V3NewsAuditRecord = z.infer<typeof V3NewsAuditRecordSchema>;
+
 export const V3MarketTickSchema = z.discriminatedUnion("kind", [
   z
     .object({

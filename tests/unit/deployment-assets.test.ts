@@ -46,4 +46,14 @@ describe("production deployment assets", () => {
     expect(ssh).toContain("PermitRootLogin no");
     expect(ssh).toContain("AllowUsers vrr-admin");
   });
+
+  it("publishes the pinned pnpm binary on the system service PATH", async () => {
+    const bootstrap = await source("deploy/bootstrap-host.sh");
+
+    expect(bootstrap).toMatch(
+      /npm install --global --no-audit --no-fund "pnpm@\$\{pnpm_version\}"/,
+    );
+    expect(bootstrap).toContain("for executable in pnpm pnpx");
+    expect(bootstrap).toMatch(/"\/usr\/local\/bin\/\$\{executable\}"/);
+  });
 });

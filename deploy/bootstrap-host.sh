@@ -58,6 +58,11 @@ for executable in node npm npx; do
   ln -sfn "${node_install_dir}/bin/${executable}" "/usr/local/bin/${executable}"
 done
 /usr/local/bin/npm install --global --no-audit --no-fund "pnpm@${pnpm_version}"
+for executable in pnpm pnpx; do
+  if [[ -e "${node_install_dir}/bin/${executable}" ]]; then
+    ln -sfn "${node_install_dir}/bin/${executable}" "/usr/local/bin/${executable}"
+  fi
+done
 
 if ! id -u virtual-risk >/dev/null 2>&1; then
   useradd --system --home-dir "${data_root}" --shell /usr/sbin/nologin virtual-risk
